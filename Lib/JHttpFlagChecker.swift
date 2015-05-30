@@ -8,7 +8,7 @@
 
 import Foundation
 
-import JUtils
+import iAsync_utils
 
 private let indexes = Set([301, 302, 303, 307])
 

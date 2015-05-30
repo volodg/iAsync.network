@@ -8,8 +8,8 @@
 
 import Foundation
 
-import JAsync
-import JUtils
+import iAsync_async
+import iAsync_utils
 
 internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer? {
     

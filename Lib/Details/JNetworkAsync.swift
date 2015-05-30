@@ -8,8 +8,8 @@
 
 import Foundation
 
-import JAsync
-import JUtils
+import iAsync_async
+import iAsync_utils
 
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
