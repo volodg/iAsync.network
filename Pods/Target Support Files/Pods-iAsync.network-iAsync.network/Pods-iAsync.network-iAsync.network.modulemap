@@ -1,0 +1,6 @@
+framework module iAsync_network {
+  umbrella header "Pods-iAsync.network-iAsync.network-umbrella.h"
+
+  export *
+  module * { export * }
+}
