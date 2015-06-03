@@ -64,11 +64,12 @@ func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> JAsyncType
 
 internal func privateGenericDataURLResponseLoader(
     params: JURLConnectionParams,
-    responseAnalyzer: JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<NSData>.JAsync {
-    
-    return { (progressCallback: JAsyncProgressCallback?,
-              stateCallback: JAsyncChangeStateCallback?,
-              finishCallback: JAsyncTypes<NSData>.JDidFinishAsyncCallback?) -> JAsyncHandler in
+    responseAnalyzer: JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
+{
+    return { (
+        progressCallback: JAsyncProgressCallback?,
+        stateCallback   : JAsyncChangeStateCallback?,
+        finishCallback  : JAsyncTypes<(NSHTTPURLResponse, NSData)>.JDidFinishAsyncCallback?) -> JAsyncHandler in
         
         let loader = privateGenericChunkedURLResponseLoader(params, responseAnalyzer)
         
@@ -106,7 +107,7 @@ internal func privateGenericDataURLResponseLoader(
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: JResult.value(responseData))
+                    finishCallback(result: JResult.value((v.value, responseData)))
                 case let .Error(error):
                     finishCallback(result: JResult.error(error))
                 }
@@ -115,14 +116,15 @@ internal func privateGenericDataURLResponseLoader(
         
         return loader(
             progressCallback: dataProgressCallback,
-            stateCallback: stateCallback,
-            finishCallback: doneCallbackWrapper)
+            stateCallback   : stateCallback,
+            finishCallback  : doneCallbackWrapper)
     }
 }
 
 public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSData>.JAsync
 {
-    return privateGenericDataURLResponseLoader(params, nil)
+    let loader = privateGenericDataURLResponseLoader(params, nil)
+    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
 func chunkedURLResponseLoader(
@@ -156,7 +158,8 @@ public func dataURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    return privateGenericDataURLResponseLoader(params, downloadStatusCodeResponseAnalyzer(params))
+    let loader = privateGenericDataURLResponseLoader(params, downloadStatusCodeResponseAnalyzer(params))
+    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
 func perkyDataURLResponseLoader(
@@ -174,4 +177,21 @@ func perkyDataURLResponseLoader(
         certificateCallback      : nil)
     
     return genericDataURLResponseLoader(params)
+}
+
+public func perkyURLResponseLoader(
+    url     : NSURL,
+    postData: NSData?,
+    headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
+{
+    let params = JURLConnectionParams(
+        url                      : url,
+        httpBody                 : postData,
+        httpMethod               : nil,
+        headers                  : headers,
+        totalBytesExpectedToWrite: 0,
+        httpBodyStreamBuilder    : nil,
+        certificateCallback      : nil)
+    
+    return privateGenericDataURLResponseLoader(params, nil)
 }
