@@ -33,19 +33,19 @@ public class JFormDataBuilder : NSObject {
                 //[self appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
                 
                 autoreleasepool {
-                    let valueData = value.dataUsingEncoding(NSUTF8StringEncoding)!
+                    let valueData = "\(value)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
                     result.appendData(valueData)
                 }
                 //[self appendData:[[obj description] dataUsingEncoding:NSUTF8StringEncoding]];
-                
-                autoreleasepool {
-                    let boundaryStr  = "\r\n--\(boundary)\(ending)"
-                    let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-                    result.appendData(boundaryData)
-                }
-                //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
             }
         }
+        
+        autoreleasepool {
+            let boundaryStr  = "--\(boundary)\(ending)"
+            let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
+            result.appendData(boundaryData)
+        }
+        //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         return result.copy() as! NSData;
     }
