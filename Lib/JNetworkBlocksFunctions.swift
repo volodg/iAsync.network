@@ -11,7 +11,7 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
-internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer? {
+internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer? {
     
     return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse> in
         
@@ -42,7 +42,7 @@ internal func networkErrorAnalyzer(context: JURLConnectionParams) -> JNetworkErr
 
 internal func privateGenericChunkedURLResponseLoader(
     params: JURLConnectionParams,
-    responseAnalyzer: JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<NSHTTPURLResponse>.JAsync {
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<NSHTTPURLResponse>.JAsync {
 
     let factory = { () -> JNetworkAsync in
         
@@ -64,7 +64,7 @@ func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> JAsyncType
 
 internal func privateGenericDataURLResponseLoader(
     params: JURLConnectionParams,
-    responseAnalyzer: JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
 {
     return { (
         progressCallback: JAsyncProgressCallback?,

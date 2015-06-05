@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-public class JNetworkError : JError {
+public class JNetworkError : Error {
     
     public override class func jffErrorsDomain() -> String {
         
