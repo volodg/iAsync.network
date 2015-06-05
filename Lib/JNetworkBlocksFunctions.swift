@@ -13,16 +13,16 @@ import iAsync_utils
 
 internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> JUtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer? {
     
-    return { (response: NSHTTPURLResponse) -> JResult<NSHTTPURLResponse> in
+    return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse> in
         
         let statusCode = response.statusCode
         
         if JHttpFlagChecker.isDownloadErrorFlag(statusCode) {
             let httpError = JHttpError(httpCode:statusCode, context:context)
-            return JResult.error(httpError)
+            return Result.error(httpError)
         }
         
-        return JResult.value(response)
+        return Result.value(response)
     }
 }
 
@@ -94,7 +94,7 @@ internal func privateGenericDataURLResponseLoader(
         var doneCallbackWrapper: JAsyncTypes<NSHTTPURLResponse>.JDidFinishAsyncCallback?
         if let finishCallback = finishCallback {
             
-            doneCallbackWrapper = { (result: JResult<NSHTTPURLResponse>) -> () in
+            doneCallbackWrapper = { (result: Result<NSHTTPURLResponse>) -> () in
                 
                 /*if ([skipPt all:^BOOL(id object) {
                 return ![[params.url description] containsString:object];
@@ -107,9 +107,9 @@ internal func privateGenericDataURLResponseLoader(
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: JResult.value((v.value, responseData)))
+                    finishCallback(result: Result.value((v.value, responseData)))
                 case let .Error(error):
-                    finishCallback(result: JResult.error(error))
+                    finishCallback(result: Result.error(error))
                 }
             }
         }

@@ -77,11 +77,11 @@ internal class JNetworkAsync : JAsyncInterface {
                     return error
                 }()
                 
-                finishCallback(result: JResult.error(passError))
+                finishCallback(result: Result.error(passError))
                 return
             }
         
-            finishCallback(result: JResult.value(resultHolder!))
+            finishCallback(result: Result.value(resultHolder!))
         }
         
         connection.didFinishLoadingBlock = finish
