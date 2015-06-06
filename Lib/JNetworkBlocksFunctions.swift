@@ -84,11 +84,6 @@ internal func privateGenericDataURLResponseLoader(
             progressCallback?(progressInfo: progressInfo)
         }
         
-        /*NSArray *skipPt = @[@"profile/profileapi/changes", @"/info/api/report", @"/api/addDeviceProfileId"];
-        
-        if ([skipPt all:^BOOL(id object) {
-        return ![[params.url description] containsString:object];
-        }])*/
         //NSLog("start url: \(params.url)")
         
         var doneCallbackWrapper: JAsyncTypes<NSHTTPURLResponse>.JDidFinishAsyncCallback?
@@ -96,9 +91,6 @@ internal func privateGenericDataURLResponseLoader(
             
             doneCallbackWrapper = { (result: Result<NSHTTPURLResponse>) -> () in
                 
-                /*if ([skipPt all:^BOOL(id object) {
-                return ![[params.url description] containsString:object];
-                }])*/
                 //NSLog("done url: \(params.url) response: \(responseData.toString())  \n \n")
                 //NSLog("done url: \(params.url)")
                 
