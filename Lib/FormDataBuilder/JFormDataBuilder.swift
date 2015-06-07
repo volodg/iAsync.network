@@ -59,7 +59,7 @@ public class JFormDataBuilder : NSObject {
     {
         var filePath = NSUUID().UUIDString
         
-        filePath = NSString.cachesPathByAppendingPathComponent(filePath)
+        filePath = String.cachesPathByAppendingPathComponent(filePath)
         let filePathPtr = filePath.cStringUsingEncoding(NSUTF8StringEncoding)
         
         let file = fopen(filePathPtr!, "w+")
