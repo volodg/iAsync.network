@@ -116,7 +116,7 @@ internal func privateGenericDataURLResponseLoader(
 public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSData>.JAsync
 {
     let loader = privateGenericDataURLResponseLoader(params: params, responseAnalyzer: nil)
-    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
+    return bindSequenceOfAsyncs(loader, { async(result: $0.1) } )
 }
 
 func chunkedURLResponseLoader(
@@ -151,7 +151,7 @@ public func dataURLResponseLoader(
         certificateCallback      : nil)
     
     let loader = privateGenericDataURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
-    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
+    return bindSequenceOfAsyncs(loader, { async(result: $0.1) } )
 }
 
 func perkyDataURLResponseLoader(

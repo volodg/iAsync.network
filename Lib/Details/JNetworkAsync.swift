@@ -69,13 +69,13 @@ internal class JNetworkAsync : JAsyncInterface {
         
             if let error = error {
                 
-                let passError = { () -> NSError in
+                let passError: NSError
                     
-                    if let errorTransformer = errorTransformer {
-                        return errorTransformer(error: error)
-                    }
-                    return error
-                }()
+                if let errorTransformer = errorTransformer {
+                    passError = errorTransformer(error: error)
+                } else {
+                    passError = error
+                }
                 
                 finishCallback(result: Result.error(passError))
                 return
