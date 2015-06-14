@@ -31,7 +31,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         let task    = nativeConnection.dataTaskWithRequest(request)
         sessionTask = task
         
-        task.resume()
+        task!.resume()
     }
     
     public override func cancel() {
@@ -165,14 +165,11 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     
     private func processLocalFileWithPath(path: String) {
         
-        var error: NSError?
         //STODO read file in separate thread
         //STODO read big files by chunks
-        let data = NSData(contentsOfFile: path, options: nil, error: &error)!
-        
-        if let error = error {
-            URLSession(nativeConnection, didBecomeInvalidWithError:error)
-        } else {
+        do {
+            let data = try NSData(contentsOfFile: path, options: [])
+            
             let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
             
             let task: NSURLSessionTask! = nil
@@ -185,6 +182,8 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
                 completionHandler: { (_) -> Void in })
             
             URLSession(nativeConnection, task: dataTask, didCompleteWithError:nil)
+        } catch let error as NSError {
+            self.URLSession(self.nativeConnection, didBecomeInvalidWithError:error)
         }
     }
     

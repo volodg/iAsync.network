@@ -41,7 +41,7 @@ internal func networkErrorAnalyzer(context: JURLConnectionParams) -> JNetworkErr
 }
 
 internal func privateGenericChunkedURLResponseLoader(
-    params: JURLConnectionParams,
+    params params: JURLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<NSHTTPURLResponse>.JAsync {
 
     let factory = { () -> JNetworkAsync in
@@ -59,11 +59,11 @@ internal func privateGenericChunkedURLResponseLoader(
 
 func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSHTTPURLResponse>.JAsync {
     
-    return privateGenericChunkedURLResponseLoader(params, nil)
+    return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: nil)
 }
 
 internal func privateGenericDataURLResponseLoader(
-    params: JURLConnectionParams,
+    params params: JURLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
 {
     return { (
@@ -71,7 +71,7 @@ internal func privateGenericDataURLResponseLoader(
         stateCallback   : JAsyncChangeStateCallback?,
         finishCallback  : JAsyncTypes<(NSHTTPURLResponse, NSData)>.JDidFinishAsyncCallback?) -> JAsyncHandler in
         
-        let loader = privateGenericChunkedURLResponseLoader(params, responseAnalyzer)
+        let loader = privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: responseAnalyzer)
         
         let responseData = NSMutableData()
         let dataProgressCallback = { (progressInfo: AnyObject) -> () in
@@ -115,7 +115,7 @@ internal func privateGenericDataURLResponseLoader(
 
 public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSData>.JAsync
 {
-    let loader = privateGenericDataURLResponseLoader(params, nil)
+    let loader = privateGenericDataURLResponseLoader(params: params, responseAnalyzer: nil)
     return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
@@ -133,7 +133,7 @@ func chunkedURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    return privateGenericChunkedURLResponseLoader(params, downloadStatusCodeResponseAnalyzer(params))
+    return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
 }
 
 public func dataURLResponseLoader(
@@ -150,7 +150,7 @@ public func dataURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    let loader = privateGenericDataURLResponseLoader(params, downloadStatusCodeResponseAnalyzer(params))
+    let loader = privateGenericDataURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
     return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
@@ -185,5 +185,5 @@ public func perkyURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    return privateGenericDataURLResponseLoader(params, nil)
+    return privateGenericDataURLResponseLoader(params: params, responseAnalyzer: nil)
 }

@@ -13,7 +13,8 @@ import iAsync_utils
 public typealias JInputStreamBuilder = () -> NSInputStream
 
 //TODO should be struct
-public class JURLConnectionParams : NSObject, Printable, NSCopying {
+//TODO CustomStringConvertible
+public class JURLConnectionParams : NSObject, NSCopying {
     
     public typealias HeadersType = [String:String]
     

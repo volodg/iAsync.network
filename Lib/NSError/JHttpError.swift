@@ -26,7 +26,7 @@ public class JHttpError : JNetworkError {
             code       : httpCode)
     }
 
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

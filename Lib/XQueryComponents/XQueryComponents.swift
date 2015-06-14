@@ -33,7 +33,7 @@ public struct XQueryComponents {
             }
         }
         
-        return join(queryComponentSeparator, result)
+        return queryComponentSeparator.join(result)
     }
     
     static public func toData(components: [String:[String]]) -> NSData

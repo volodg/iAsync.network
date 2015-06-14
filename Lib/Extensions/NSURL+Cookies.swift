@@ -14,7 +14,7 @@ public extension NSURL {
         
         var cookiesLog = "Cookies for url: \(self)\n"
     
-        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookiesForURL(self) as? [NSHTTPCookie] {
+        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookiesForURL(self) {
             
             for cookie in cookies {
                 
@@ -28,7 +28,7 @@ public extension NSURL {
     func removeCookies() {
         
         let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        let cookies = cookieStorage.cookiesForURL(self) as? [NSHTTPCookie]
+        let cookies = cookieStorage.cookiesForURL(self)
         
         if let cookies = cookies {
             for cookie in cookies {

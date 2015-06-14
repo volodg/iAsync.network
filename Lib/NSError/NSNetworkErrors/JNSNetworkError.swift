@@ -23,7 +23,7 @@ public class JNSNetworkError : JNetworkError {
         super.init(description:"")
     }
 
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -46,7 +46,7 @@ public class JNSNetworkError : JNetworkError {
             JNSNoInternetNetworkError.self
         ]
         
-        selfType = firstMatch(errorClasses) { (object: JNSNetworkError.Type) -> Bool in
+        selfType = errorClasses.firstMatch { (object: JNSNetworkError.Type) -> Bool in
             
             return object.isMineNSNetworkError(nativeError)
         }
