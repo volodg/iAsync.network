@@ -69,11 +69,9 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     private var nativeConnection: NSURLSession {
         
         if let nativeConnection = _nativeConnection {
-                
+            
             return nativeConnection
         }
-            
-        let request = NSMutableURLRequest(params: params)
         
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
@@ -172,7 +170,6 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
             
             let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
             
-            let task: NSURLSessionTask! = nil
             let dataTask: NSURLSessionDataTask! = nil
             
             URLSession(
@@ -181,7 +178,10 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
                 didReceiveResponse: response,
                 completionHandler: { (_) -> Void in })
             
+            URLSession(nativeConnection, dataTask: dataTask, didReceiveData: data)
+            
             URLSession(nativeConnection, task: dataTask, didCompleteWithError:nil)
+            
         } catch let error as NSError {
             self.URLSession(self.nativeConnection, didBecomeInvalidWithError:error)
         }
