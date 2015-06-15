@@ -94,8 +94,8 @@ internal class JNetworkAsync : JAsyncInterface {
                 let result = responseAnalyzer(object: response)
                 
                 switch result {
-                case let .Value(v):
-                    resultHolder = v.value
+                case let .Value(value):
+                    resultHolder = value
                 case let .Error(error):
                     unretainedSelf.forceCancel()
                     finish(error)

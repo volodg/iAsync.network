@@ -95,11 +95,11 @@ internal func privateGenericDataURLResponseLoader(
                 //NSLog("done url: \(params.url)")
                 
                 switch result {
-                case let .Value(v):
+                case let .Value(value):
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: Result.value((v.value, responseData)))
+                    finishCallback(result: Result.value((value, responseData)))
                 case let .Error(error):
                     finishCallback(result: Result.error(error))
                 }
