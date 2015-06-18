@@ -62,7 +62,7 @@ func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> JAsyncType
     return privateGenericChunkedURLResponseLoader(params, nil)
 }
 
-internal func privateGenericDataURLResponseLoader(
+public func dataWithRespURLParamsLoader(
     params: JURLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData)>.JAsync
 {
@@ -115,7 +115,7 @@ internal func privateGenericDataURLResponseLoader(
 
 public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSData>.JAsync
 {
-    let loader = privateGenericDataURLResponseLoader(params, nil)
+    let loader = dataWithRespURLParamsLoader(params, nil)
     return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
@@ -150,7 +150,7 @@ public func dataURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    let loader = privateGenericDataURLResponseLoader(params, downloadStatusCodeResponseAnalyzer(params))
+    let loader = dataWithRespURLParamsLoader(params, downloadStatusCodeResponseAnalyzer(params))
     return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
 }
 
@@ -185,5 +185,5 @@ public func perkyURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    return privateGenericDataURLResponseLoader(params, nil)
+    return dataWithRespURLParamsLoader(params, nil)
 }
