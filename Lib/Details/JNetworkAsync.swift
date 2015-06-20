@@ -11,6 +11,8 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
+import Result
+
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
 internal class JNetworkAsync : JAsyncInterface {
@@ -77,11 +79,11 @@ internal class JNetworkAsync : JAsyncInterface {
                     passError = error
                 }
                 
-                finishCallback(result: Result.error(passError))
+                finishCallback(result: Result.failure(passError))
                 return
             }
         
-            finishCallback(result: Result.value(resultHolder!))
+            finishCallback(result: Result.success(resultHolder!))
         }
         
         connection.didFinishLoadingBlock = finish
@@ -94,9 +96,9 @@ internal class JNetworkAsync : JAsyncInterface {
                 let result = responseAnalyzer(object: response)
                 
                 switch result {
-                case let .Value(value):
+                case let .Success(value):
                     resultHolder = value
-                case let .Error(error):
+                case let .Failure(error):
                     unretainedSelf.forceCancel()
                     finish(error)
                 }
