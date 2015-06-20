@@ -11,18 +11,20 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
+import Result
+
 internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse>.JAnalyzer? {
     
-    return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse> in
+    return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, NSError> in
         
         let statusCode = response.statusCode
         
         if JHttpFlagChecker.isDownloadErrorFlag(statusCode) {
             let httpError = JHttpError(httpCode:statusCode, context:context)
-            return Result.error(httpError)
+            return Result.failure(httpError)
         }
         
-        return Result.value(response)
+        return Result.success(response)
     }
 }
 
@@ -89,19 +91,19 @@ public func dataWithRespURLParamsLoader(
         var doneCallbackWrapper: JAsyncTypes<NSHTTPURLResponse>.JDidFinishAsyncCallback?
         if let finishCallback = finishCallback {
             
-            doneCallbackWrapper = { (result: Result<NSHTTPURLResponse>) -> () in
+            doneCallbackWrapper = { (result: Result<NSHTTPURLResponse, NSError>) -> () in
                 
                 //NSLog("done url: \(params.url) response: \(responseData.toString())  \n \n")
                 //NSLog("done url: \(params.url)")
                 
                 switch result {
-                case let .Value(v):
+                case let .Success(v):
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: Result.value((v.value, responseData)))
-                case let .Error(error):
-                    finishCallback(result: Result.error(error))
+                    finishCallback(result: Result.success((v.value, responseData)))
+                case let .Failure(error):
+                    finishCallback(result: Result.failure(error.value))
                 }
             }
         }
