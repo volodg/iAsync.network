@@ -32,7 +32,7 @@ public class JHttpError : JNetworkError {
     
     public override func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return self.dynamicType(httpCode: httpCode, context: context)
+        return self.dynamicType.init(httpCode: httpCode, context: context)
     }
     
     func isHttpNotChangedError() -> Bool {

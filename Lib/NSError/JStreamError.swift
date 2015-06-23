@@ -32,7 +32,7 @@ public class JStreamError : JNetworkError {
     
     public override func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return self.dynamicType(streamError: streamError, context: context)
+        return self.dynamicType.init(streamError: streamError, context: context)
     }
     
     public override var errorLogDescription: String {

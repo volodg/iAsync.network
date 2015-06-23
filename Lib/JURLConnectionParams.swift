@@ -47,7 +47,7 @@ public class JURLConnectionParams : NSObject, NSCopying {
     
     public func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return self.dynamicType(
+        return self.dynamicType.init(
             url                      : self.url,
             httpBody                 : self.httpBody,
             httpMethod               : self.httpMethod,

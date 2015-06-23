@@ -12,7 +12,7 @@ public extension NSMutableData {
 
     class func dataForHTTPPostWithData(data: NSData, fileName: String, parameterName: String, boundary: String) -> Self {
         
-        let result = self(capacity: data.length + 512)!
+        let result = self.init(capacity: data.length + 512)!
         
         result.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         result.appendData("Content-Disposition: form-data; name=\"\(parameterName)\"; filename=\"\(fileName)\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)

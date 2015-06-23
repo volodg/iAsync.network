@@ -56,7 +56,7 @@ public class JNSNetworkError : JNetworkError {
             selfType = JNSNetworkError.self
         }
         
-        return selfType(context: context, nativeError: nativeError)
+        return selfType.init(context: context, nativeError: nativeError)
     }
     
     class func isMineNSNetworkError(error: NSError) -> Bool {
@@ -65,7 +65,7 @@ public class JNSNetworkError : JNetworkError {
     
     public override func copyWithZone(zone: NSZone) -> AnyObject {
         
-        return self.dynamicType(context: context, nativeError: nativeError)
+        return self.dynamicType.init(context: context, nativeError: nativeError)
     }
     
     public override var errorLogDescription: String {
