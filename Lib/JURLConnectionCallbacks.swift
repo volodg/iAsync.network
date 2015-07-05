@@ -12,4 +12,4 @@ public typealias JDidReceiveResponseHandler      = (response: NSHTTPURLResponse)
 public typealias JDidFinishLoadingHandler        = (error: NSError?) -> ()
 public typealias JDidReceiveDataHandler          = (data: NSData) -> ()
 public typealias JDidUploadDataHandler           = (progress: Float) -> ()
-public typealias JShouldAcceptCertificateForHost = (host: String) -> Bool
+public typealias JShouldAcceptCertificateForHost = (callback: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void) -> Void

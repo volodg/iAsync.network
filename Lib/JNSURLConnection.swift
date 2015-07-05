@@ -163,6 +163,14 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         }
     }
     
+    public func URLSession(
+        session: NSURLSession,
+        didReceiveChallenge challenge: NSURLAuthenticationChallenge,
+        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)
+    {
+        shouldAcceptCertificateBlock?(callback: completionHandler)
+    }
+    
     private func processLocalFileWithPath(path: String) {
         
         var error: NSError?
