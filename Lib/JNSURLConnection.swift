@@ -12,8 +12,8 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
 
     private let params: JURLConnectionParams
     
-    public init(params: JURLConnectionParams) {
-        
+    public init(params: JURLConnectionParams)
+    {
         self.params = params
     }
     
