@@ -40,7 +40,7 @@ internal class JNetworkAsync : JAsyncInterface {
         stateCallback   : JAsyncChangeStateCallback,
         progressCallback: JAsyncProgressCallback)
     {
-        let connection  = JNSURLConnection(params:self.params)
+        let connection  = JNSURLConnection(params: self.params)
         self.connection = connection
         
         connection.shouldAcceptCertificateBlock = self.params.certificateCallback

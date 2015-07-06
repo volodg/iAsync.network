@@ -8,14 +8,14 @@
 
 import Foundation
 
-public protocol JURLConnection : NSObjectProtocol {
-
+public protocol JURLConnection : NSObjectProtocol
+{
     func start()
     func cancel()
-
+    
     var downloadedBytesCount: Int64 { get }
     var totalBytesCount     : Int64 { get }
-
+    
     //callbacks cleared after finish of loading
     var didReceiveResponseBlock     : JDidReceiveResponseHandler?      { get set }
     var didReceiveDataBlock         : JDidReceiveDataHandler?          { get set }

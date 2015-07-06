@@ -12,8 +12,8 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
 
     private let params: JURLConnectionParams
     
-    public init(params: JURLConnectionParams) {
-        
+    public init(params: JURLConnectionParams)
+    {
         self.params = params
     }
     
@@ -159,6 +159,14 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
             
             didUploadDataBlock(progress: Float(totalBytesSent)/Float(totalBytesExpectedToWrite))
         }
+    }
+    
+    public func URLSession(
+        session: NSURLSession,
+        didReceiveChallenge challenge: NSURLAuthenticationChallenge,
+        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)
+    {
+        shouldAcceptCertificateBlock?(callback: completionHandler)
     }
     
     private func processLocalFileWithPath(path: String) {
