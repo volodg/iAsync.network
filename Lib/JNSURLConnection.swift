@@ -164,7 +164,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     public func URLSession(
         session: NSURLSession,
         didReceiveChallenge challenge: NSURLAuthenticationChallenge,
-        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void)
+        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void)
     {
         shouldAcceptCertificateBlock?(callback: completionHandler)
     }
