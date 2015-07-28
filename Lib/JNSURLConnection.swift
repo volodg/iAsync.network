@@ -31,7 +31,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         let task    = nativeConnection.dataTaskWithRequest(request)
         sessionTask = task
         
-        task!.resume()
+        task.resume()
     }
     
     public override func cancel() {
@@ -171,7 +171,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
             callback(callback: completionHandler)
         } else {
             
-            let credentials = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust)
+            let credentials = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
             completionHandler(.UseCredential, credentials)
         }
     }
