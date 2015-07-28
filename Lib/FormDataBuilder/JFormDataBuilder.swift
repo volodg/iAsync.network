@@ -51,11 +51,12 @@ public class JFormDataBuilder : NSObject {
     }
     
     public class func tmpFileForUploadStreamWithDataForFilePath(
-        dataFilePath: String,
-        boundary: String,
-        name: String,
-        fileName: String,
-        dictWithParam: [String:String]) -> String
+        dataFilePath : String,
+        boundary     : String,
+        name         : String,
+        fileName     : String,
+        contentType  : String?,
+        dictWithParam: [String:String]?) -> String
     {
         var filePath = NSUUID().UUIDString
         
@@ -81,8 +82,9 @@ public class JFormDataBuilder : NSObject {
         //[result appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", parameter, fileName] dataUsingEncoding:NSUTF8StringEncoding]];
         
         autoreleasepool {
-            let contentType     = "Content-Type: application/octet-stream\r\n\r\n";
-            let contentTypeData = contentType.dataUsingEncoding(NSUTF8StringEncoding)!
+            let contentTypeStr  = contentType ?? "application/octet-stream"
+            let contentTypeSrv  = "Content-Type: \(contentTypeStr)\r\n\r\n";
+            let contentTypeData = contentTypeSrv.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(contentTypeData.bytes, 1, contentTypeData.length, file)
         }
         //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
@@ -119,10 +121,13 @@ public class JFormDataBuilder : NSObject {
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
-        autoreleasepool {
+        if let dictWithParam = dictWithParam {
+        
+            autoreleasepool {
             
-            let formData = self.formDataForParams(boundary, dictWithParam: dictWithParam, ending: "\r\n")
-            fwrite(formData.bytes, 1, formData.length, file)
+                let formData = self.formDataForParams(boundary, dictWithParam: dictWithParam, ending: "\r\n")
+                fwrite(formData.bytes, 1, formData.length, file)
+            }
         }
         
         fclose(file)
