@@ -57,7 +57,7 @@ internal class JNetworkAsync : JAsyncInterface {
             progressCallback(progressInfo: progressData)
         }
         
-        connection.didUploadDataBlock = { (progress: Float) -> () in
+        connection.didUploadDataBlock = { (progress: Double) -> () in
             
             let uploadProgress = JNetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
             progressCallback(progressInfo: uploadProgress)

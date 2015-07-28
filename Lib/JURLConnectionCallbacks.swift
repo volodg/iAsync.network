@@ -11,5 +11,5 @@ import Foundation
 public typealias JDidReceiveResponseHandler      = (response: NSHTTPURLResponse) -> ()
 public typealias JDidFinishLoadingHandler        = (error: NSError?) -> ()
 public typealias JDidReceiveDataHandler          = (data: NSData) -> ()
-public typealias JDidUploadDataHandler           = (progress: Float) -> ()
+public typealias JDidUploadDataHandler           = (progress: Double) -> ()
 public typealias JShouldAcceptCertificateForHost = (callback: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void) -> Void
