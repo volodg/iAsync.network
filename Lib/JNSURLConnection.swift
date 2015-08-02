@@ -157,7 +157,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
                 return
             }
             
-            didUploadDataBlock(progress: Float(totalBytesSent)/Float(totalBytesExpectedToWrite))
+            didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
         }
     }
     

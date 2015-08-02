@@ -10,7 +10,7 @@ import Foundation
 
 protocol JUploadProgress : NSObjectProtocol {
     
-    var progress: Float { get }
+    var progress: Double { get }
     var url: NSURL { get }
     var headers: NSDictionary? { get }
 }
