@@ -156,7 +156,7 @@ public func dataURLResponseLoader(
     return bindSequenceOfAsyncs(loader, { async(result: $0.1) } )
 }
 
-func perkyDataURLResponseLoader(
+public func perkyDataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
     headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<NSData>.JAsync

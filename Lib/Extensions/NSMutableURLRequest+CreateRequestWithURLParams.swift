@@ -21,9 +21,13 @@ extension NSMutableURLRequest {
             cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
             timeoutInterval: 60.0)
         
-        let httpMethod = params.httpMethod == nil && (params.httpBody != nil || inputStream != nil)
-        ? "POST"
-        : params.httpMethod ?? "GET"
+        let httpMethod = { () -> String in
+            
+            if params.httpMethod == nil && (params.httpBody != nil || inputStream != nil) {
+                return "POST"
+            }
+            return params.httpMethod ?? "GET"
+        }()
         
         self.HTTPBodyStream = inputStream
         if let httpBody = params.httpBody {
