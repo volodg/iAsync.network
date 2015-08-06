@@ -12,7 +12,7 @@ public extension String {
     
     func stringByDecodingURLQueryComponents() -> String {
         
-        return stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        return stringByRemovingPercentEncoding!
     }
     
     func stringByEncodingURLQueryComponents() -> String {
