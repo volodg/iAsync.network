@@ -30,7 +30,6 @@ extension NSMutableURLRequest {
         let httpMethod = { () -> String in
             
             if params.httpMethod == nil && (params.httpBody != nil || inputStream != nil) {
-                
                 return "POST"
             }
             return params.httpMethod ?? "GET"

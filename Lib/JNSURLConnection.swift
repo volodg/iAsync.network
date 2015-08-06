@@ -85,7 +85,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         
         let nativeConnection = NSURLSession(
             configuration: configuration,
-            delegate: self,
+            delegate     : self,
             delegateQueue: queue)
         
         _nativeConnection = nativeConnection
