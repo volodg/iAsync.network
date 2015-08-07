@@ -11,23 +11,22 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
-import Result
-
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
 internal class JNetworkAsync : JAsyncInterface {
 
-    typealias ResultType = NSHTTPURLResponse
+    typealias ErrorT = NSError
+    typealias ValueT = NSHTTPURLResponse
     
     private let params          : JURLConnectionParams
-    private let responseAnalyzer: UtilsBlockDefinitions2<ResultType, ResultType>.JAnalyzer?
+    private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?
     private let errorTransformer: JNetworkErrorTransformer?
     
     private var connection : JURLConnection?
     
     init(
         params          : JURLConnectionParams,
-        responseAnalyzer: UtilsBlockDefinitions2<ResultType, ResultType>.JAnalyzer?,
+        responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?,
         errorTransformer: JNetworkErrorTransformer?)
     {
         self.params           = params
@@ -36,7 +35,7 @@ internal class JNetworkAsync : JAsyncInterface {
     }
     
     func asyncWithResultCallback(
-        finishCallback  : JAsyncTypes<ResultType>.JDidFinishAsyncCallback,
+        finishCallback  : JAsyncTypes<ValueT, ErrorT>.JDidFinishAsyncCallback,
         stateCallback   : JAsyncChangeStateCallback,
         progressCallback: JAsyncProgressCallback)
     {
@@ -63,27 +62,36 @@ internal class JNetworkAsync : JAsyncInterface {
             progressCallback(progressInfo: uploadProgress)
         }
         
-        var resultHolder: ResultType?
+        var resultHolder: ValueT?
         
         let errorTransformer = self.errorTransformer
         
-        let finish = { (error: NSError?) -> () in
+        let finishWithError = { (error: AsyncResult<ValueT, ErrorT>?) -> () in
         
             if let error = error {
                 
-                let passError: NSError
+                let passError = { () -> AsyncResult<ValueT, ErrorT> in
                     
-                if let errorTransformer = errorTransformer {
-                    passError = errorTransformer(error: error)
-                } else {
-                    passError = error
-                }
+                    if let errorTransformer = errorTransformer {
+                        return error.mapError(errorTransformer)
+                    }
+                    return error
+                }()
                 
-                finishCallback(result: Result.failure(passError))
+                finishCallback(result: passError)
                 return
             }
+            
+            finishCallback(result: AsyncResult.success(resultHolder!))
+        }
         
-            finishCallback(result: Result.success(resultHolder!))
+        let finish = { (error: NSError?) -> Void in
+            
+            if let error = error {
+                finishWithError(AsyncResult.failure(error))
+            } else {
+                finishWithError(nil)
+            }
         }
         
         connection.didFinishLoadingBlock = finish
@@ -100,7 +108,13 @@ internal class JNetworkAsync : JAsyncInterface {
                     resultHolder = value
                 case let .Failure(error):
                     unretainedSelf.forceCancel()
-                    finish(error)
+                    finish(error.value)
+                case .Interrupted:
+                    unretainedSelf.forceCancel()
+                    finishWithError(.Interrupted)
+                case .Unsubscribed:
+                    unretainedSelf.forceCancel()
+                    finishWithError(.Unsubscribed)
                 }
                 return
             }
