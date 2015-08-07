@@ -108,7 +108,7 @@ internal class JNetworkAsync : JAsyncInterface {
                     resultHolder = value
                 case let .Failure(error):
                     unretainedSelf.forceCancel()
-                    finish(error.value)
+                    finish(error)
                 case .Interrupted:
                     unretainedSelf.forceCancel()
                     finishWithError(.Interrupted)

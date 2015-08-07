@@ -99,9 +99,9 @@ public func dataWithRespURLParamsLoader(
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: AsyncResult.success((v.value, responseData)))
+                    finishCallback(result: AsyncResult.success((value, responseData)))
                 case let .Failure(error):
-                    finishCallback(result: AsyncResult.failure(error.value))
+                    finishCallback(result: AsyncResult.failure(error))
                 case .Interrupted:
                     finishCallback(result: .Interrupted)
                 case .Unsubscribed:
