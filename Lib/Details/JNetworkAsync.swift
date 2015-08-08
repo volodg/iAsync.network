@@ -35,9 +35,9 @@ internal class JNetworkAsync : JAsyncInterface {
     }
     
     func asyncWithResultCallback(
-        finishCallback  : JAsyncTypes<ValueT, ErrorT>.JDidFinishAsyncCallback,
-        stateCallback   : JAsyncChangeStateCallback,
-        progressCallback: JAsyncProgressCallback)
+        finishCallback  : AsyncTypes<ValueT, ErrorT>.JDidFinishAsyncCallback,
+        stateCallback   : AsyncChangeStateCallback,
+        progressCallback: AsyncProgressCallback)
     {
         let connection  = JNSURLConnection(params: self.params)
         self.connection = connection
