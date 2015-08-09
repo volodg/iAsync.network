@@ -120,7 +120,7 @@ public func dataWithRespURLParamsLoader(
 public func genericDataURLResponseLoader(params: JURLConnectionParams) -> AsyncTypes<NSData, NSError>.Async
 {
     let loader = dataWithRespURLParamsLoader(params, nil)
-    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
+    return bindSequenceOfAsyncs(loader, { asyncWithValue($0.1) } )
 }
 
 func chunkedURLResponseLoader(
@@ -155,7 +155,7 @@ public func dataURLResponseLoader(
         certificateCallback      : nil)
     
     let loader = dataWithRespURLParamsLoader(params, downloadStatusCodeResponseAnalyzer(params))
-    return bindSequenceOfAsyncs(loader, { asyncWithResult($0.1) } )
+    return bindSequenceOfAsyncs(loader, { asyncWithValue($0.1) } )
 }
 
 public func perkyDataURLResponseLoader(
