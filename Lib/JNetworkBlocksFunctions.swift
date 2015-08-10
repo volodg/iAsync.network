@@ -42,7 +42,7 @@ internal func networkErrorAnalyzer(context: JURLConnectionParams) -> JNetworkErr
 
 internal func privateGenericChunkedURLResponseLoader(
     params params: JURLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> JAsyncTypes<NSHTTPURLResponse, NSError>.JAsync {
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
     let factory = { () -> JNetworkAsync in
         
@@ -57,19 +57,19 @@ internal func privateGenericChunkedURLResponseLoader(
     return loader
 }
 
-func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSHTTPURLResponse, NSError>.JAsync {
+func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
     
     return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: nil)
 }
 
 public func dataWithRespURLParamsLoader(
     params params: JURLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> JAsyncTypes<(NSHTTPURLResponse, NSData), NSError>.JAsync
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
 {
     return { (
-        progressCallback: JAsyncProgressCallback?,
-        stateCallback   : JAsyncChangeStateCallback?,
-        finishCallback  : JAsyncTypes<(NSHTTPURLResponse, NSData), NSError>.JDidFinishAsyncCallback?) -> JAsyncHandler in
+        progressCallback: AsyncProgressCallback?,
+        stateCallback   : AsyncChangeStateCallback?,
+        finishCallback  : AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.JDidFinishAsyncCallback?) -> JAsyncHandler in
         
         let loader = privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: responseAnalyzer)
         
@@ -86,7 +86,7 @@ public func dataWithRespURLParamsLoader(
         
         //NSLog("start url: \(params.url)")
         
-        var doneCallbackWrapper: JAsyncTypes<NSHTTPURLResponse, NSError>.JDidFinishAsyncCallback?
+        var doneCallbackWrapper: AsyncTypes<NSHTTPURLResponse, NSError>.JDidFinishAsyncCallback?
         if let finishCallback = finishCallback {
             
             doneCallbackWrapper = { (result: AsyncResult<NSHTTPURLResponse, NSError>) -> () in
@@ -117,7 +117,7 @@ public func dataWithRespURLParamsLoader(
     }
 }
 
-public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsyncTypes<NSData, NSError>.JAsync
+public func genericDataURLResponseLoader(params: JURLConnectionParams) -> AsyncTypes<NSData, NSError>.Async
 {
     let loader = dataWithRespURLParamsLoader(params: params, responseAnalyzer: nil)
     return bindSequenceOfAsyncs(loader, { async(value: $0.1) } )
@@ -126,7 +126,7 @@ public func genericDataURLResponseLoader(params: JURLConnectionParams) -> JAsync
 func chunkedURLResponseLoader(
     url     : NSURL,
     postData: NSData,
-    headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<NSHTTPURLResponse, NSError>.JAsync
+    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async
 {
     let params = JURLConnectionParams(
         url                      : url,
@@ -143,7 +143,7 @@ func chunkedURLResponseLoader(
 public func dataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<NSData, NSError>.JAsync
+    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
 {
     let params = JURLConnectionParams(
         url                      : url,
@@ -161,7 +161,7 @@ public func dataURLResponseLoader(
 public func perkyDataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<NSData, NSError>.JAsync
+    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
 {
     let params = JURLConnectionParams(
         url                      : url,
@@ -178,7 +178,7 @@ public func perkyDataURLResponseLoader(
 public func perkyURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> JAsyncTypes<(NSHTTPURLResponse, NSData), NSError>.JAsync
+    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
 {
     let params = JURLConnectionParams(
         url                      : url,
