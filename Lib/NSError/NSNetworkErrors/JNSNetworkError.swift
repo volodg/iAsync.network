@@ -46,13 +46,15 @@ public class JNSNetworkError : JNetworkError {
             JNSNoInternetNetworkError.self
         ]
         
-        selfType = errorClasses.firstMatch { (object: JNSNetworkError.Type) -> Bool in
+        selfType = { () -> JNSNetworkError.Type! in
             
-            return object.isMineNSNetworkError(nativeError)
-        }
+            if let index = errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }) {
+                return errorClasses[index]
+            }
+            return nil
+        }()
         
         if selfType == nil {
-            
             selfType = JNSNetworkError.self
         }
         
