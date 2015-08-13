@@ -8,21 +8,21 @@
 
 import Foundation
 
-class JNSNoInternetNetworkError : JNSNetworkError {
+public class JNSNoInternetNetworkError : JNSNetworkError {
     
     override class func isMineNSNetworkError(error: NSError) -> Bool {
         return error.isNetworkError
     }
     
-    override var localizedDescription: String {
+    override public var localizedDescription: String {
         
         return NSLocalizedString(
             "J_NETWORK_NO_INTERNET_ERROR",
-            bundle: NSBundle(forClass: self.dynamicType),
+            bundle : NSBundle(forClass: self.dynamicType),
             comment:"")
     }
     
-    override func writeErrorWithJLogger() {
+    override public func writeErrorWithJLogger() {
         writeErrorToNSLog()
     }
 }
