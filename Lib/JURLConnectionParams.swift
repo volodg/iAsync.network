@@ -57,6 +57,21 @@ public class JURLConnectionParams : NSObject, Printable, NSCopying {
     }
     
     public override var description: String {
-        return "<JURLConnectionParams url:\(url), httpBody:\(httpBody?.toString()), headers:\(headers)>"
+        
+        let bodyStr: String
+        if let httpBody = httpBody?.toString() {
+            bodyStr = httpBody
+        } else {
+            bodyStr = "nil"
+        }
+        
+        let headersStr: String
+        if let headers = headers?.description {
+            headersStr = headers
+        } else {
+            headersStr = "nil"
+        }
+        
+        return "<JURLConnectionParams url:\(url), httpBody:\(bodyStr), headers:\(headersStr)>"
     }
 }
