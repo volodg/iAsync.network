@@ -93,7 +93,8 @@ Pod::Spec.new do |s|
   #
 
   # s.resource  = "icon.png"
-  # s.resources = "Resources/*.png"
+  # s.resources = "Resources/*.strings"
+  s.ios.resource_bundle = { 'Bundle' => 'Resources/*'}
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
