@@ -1,6 +1,6 @@
 //
 //  String+XQueryComponents.swift
-//  JNetwork
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 13.10.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
