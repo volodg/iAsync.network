@@ -69,7 +69,7 @@ public func dataWithRespURLParamsLoader(
     return { (
         progressCallback: AsyncProgressCallback?,
         stateCallback   : AsyncChangeStateCallback?,
-        finishCallback  : AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.JDidFinishAsyncCallback?) -> JAsyncHandler in
+        finishCallback  : AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.DidFinishAsyncCallback?) -> JAsyncHandler in
         
         let loader = privateGenericChunkedURLResponseLoader(params, responseAnalyzer)
         
@@ -86,7 +86,7 @@ public func dataWithRespURLParamsLoader(
         
         //NSLog("start url: \(params.url)")
         
-        var doneCallbackWrapper: AsyncTypes<NSHTTPURLResponse, NSError>.JDidFinishAsyncCallback?
+        var doneCallbackWrapper: AsyncTypes<NSHTTPURLResponse, NSError>.DidFinishAsyncCallback?
         if let finishCallback = finishCallback {
             
             doneCallbackWrapper = { (result: AsyncResult<NSHTTPURLResponse, NSError>) -> () in
