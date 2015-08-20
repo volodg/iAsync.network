@@ -26,7 +26,7 @@ internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> UtilsBlo
     }
 }
 
-internal func networkErrorAnalyzer(context: JURLConnectionParams) -> JNetworkErrorTransformer {
+internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErrorTransformer {
     
     return { (error: NSError) -> NSError in
         
@@ -41,7 +41,7 @@ internal func networkErrorAnalyzer(context: JURLConnectionParams) -> JNetworkErr
 }
 
 internal func privateGenericChunkedURLResponseLoader(
-    params: JURLConnectionParams,
+    params: URLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
     let factory = { () -> JNetworkAsync in
@@ -57,13 +57,13 @@ internal func privateGenericChunkedURLResponseLoader(
     return loader
 }
 
-func genericChunkedURLResponseLoader(params: JURLConnectionParams) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
+func genericChunkedURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
     
     return privateGenericChunkedURLResponseLoader(params, nil)
 }
 
 public func dataWithRespURLParamsLoader(
-    params: JURLConnectionParams,
+    params: URLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
 {
     return { (
@@ -117,7 +117,7 @@ public func dataWithRespURLParamsLoader(
     }
 }
 
-public func genericDataURLResponseLoader(params: JURLConnectionParams) -> AsyncTypes<NSData, NSError>.Async
+public func genericDataURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<NSData, NSError>.Async
 {
     let loader = dataWithRespURLParamsLoader(params, nil)
     return bindSequenceOfAsyncs(loader, { asyncWithValue($0.1) } )
@@ -126,9 +126,9 @@ public func genericDataURLResponseLoader(params: JURLConnectionParams) -> AsyncT
 func chunkedURLResponseLoader(
     url     : NSURL,
     postData: NSData,
-    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async
 {
-    let params = JURLConnectionParams(
+    let params = URLConnectionParams(
         url                      : url,
         httpBody                 : postData,
         httpMethod               : nil,
@@ -143,9 +143,9 @@ func chunkedURLResponseLoader(
 public func dataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
 {
-    let params = JURLConnectionParams(
+    let params = URLConnectionParams(
         url                      : url,
         httpBody                 : postData,
         httpMethod               : nil,
@@ -161,9 +161,9 @@ public func dataURLResponseLoader(
 public func perkyDataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
 {
-    let params = JURLConnectionParams(
+    let params = URLConnectionParams(
         url                      : url,
         httpBody                 : postData,
         httpMethod               : nil,
@@ -178,9 +178,9 @@ public func perkyDataURLResponseLoader(
 public func perkyURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : JURLConnectionParams.HeadersType?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
 {
-    let params = JURLConnectionParams(
+    let params = URLConnectionParams(
         url                      : url,
         httpBody                 : postData,
         httpMethod               : nil,

@@ -12,10 +12,10 @@ import iAsync_utils
 
 public class JNSNetworkError : JNetworkError {
     
-    let context: JURLConnectionParams
+    let context: URLConnectionParams
     let nativeError: NSError
     
-    public required init(context: JURLConnectionParams, nativeError: NSError) {
+    public required init(context: URLConnectionParams, nativeError: NSError) {
         
         self.context     = context
         self.nativeError = nativeError
@@ -36,7 +36,7 @@ public class JNSNetworkError : JNetworkError {
     }
     
     public class func createJNSNetworkErrorWithContext(
-        context: JURLConnectionParams, nativeError: NSError) -> JNSNetworkError {
+        context: URLConnectionParams, nativeError: NSError) -> JNSNetworkError {
         
         var selfType: JNSNetworkError.Type!
         

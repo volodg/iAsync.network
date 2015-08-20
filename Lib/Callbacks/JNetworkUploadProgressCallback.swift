@@ -10,7 +10,7 @@ import Foundation
 
 public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
     
-    public let params: JURLConnectionParams
+    public let params  : URLConnectionParams
     public let progress: Double
     
     public var url: NSURL {
@@ -21,7 +21,7 @@ public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
         return params.headers
     }
     
-    public init(params: JURLConnectionParams, progress: Double) {
+    public init(params: URLConnectionParams, progress: Double) {
         
         self.params   = params
         self.progress = progress

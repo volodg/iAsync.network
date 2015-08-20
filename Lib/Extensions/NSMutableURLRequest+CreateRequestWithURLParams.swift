@@ -10,7 +10,7 @@ import Foundation
 
 extension NSMutableURLRequest {
 
-     convenience init(params: JURLConnectionParams) {
+     convenience init(params: URLConnectionParams) {
     
         let inputStream = { () -> NSInputStream? in
             
