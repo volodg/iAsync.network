@@ -1,6 +1,6 @@
 //
 //  JNetworkAsync.swift
-//  JNetwork
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -35,7 +35,7 @@ internal class JNetworkAsync : JAsyncInterface {
     }
     
     func asyncWithResultCallback(
-        finishCallback  : AsyncTypes<ValueT, ErrorT>.JDidFinishAsyncCallback,
+        finishCallback  : AsyncTypes<ValueT, ErrorT>.DidFinishAsyncCallback,
         stateCallback   : AsyncChangeStateCallback,
         progressCallback: AsyncProgressCallback)
     {
