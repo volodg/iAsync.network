@@ -1,5 +1,5 @@
 //
-//  JURLConnectionParams.swift
+//  URLConnectionParams.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 24.09.14.
@@ -13,8 +13,7 @@ import iAsync_utils
 public typealias JInputStreamBuilder = () -> NSInputStream
 
 //TODO should be struct
-//TODO CustomStringConvertible
-public class JURLConnectionParams : NSObject, NSCopying {
+public class URLConnectionParams : NSObject, CustomStringConvertible, NSCopying {
     
     public typealias HeadersType = [String:String]
     
@@ -73,6 +72,6 @@ public class JURLConnectionParams : NSObject, NSCopying {
             headersStr = "nil"
         }
         
-        return "<JURLConnectionParams url:\(url), httpBody:\(bodyStr), headers:\(headersStr)>"
+        return "<URLConnectionParams url:\(url), httpBody:\(bodyStr), headers:\(headersStr)>"
     }
 }

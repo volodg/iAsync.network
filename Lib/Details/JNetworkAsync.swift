@@ -18,14 +18,14 @@ internal class JNetworkAsync : JAsyncInterface {
     typealias ErrorT = NSError
     typealias ValueT = NSHTTPURLResponse
     
-    private let params          : JURLConnectionParams
+    private let params          : URLConnectionParams
     private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?
     private let errorTransformer: JNetworkErrorTransformer?
     
     private var connection : JURLConnection?
     
     init(
-        params          : JURLConnectionParams,
+        params          : URLConnectionParams,
         responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?,
         errorTransformer: JNetworkErrorTransformer?)
     {

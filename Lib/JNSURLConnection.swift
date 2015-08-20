@@ -10,9 +10,9 @@ import Foundation
 
 public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
 
-    private let params: JURLConnectionParams
+    private let params: URLConnectionParams
     
-    public init(params: JURLConnectionParams)
+    public init(params: URLConnectionParams)
     {
         self.params = params
     }
