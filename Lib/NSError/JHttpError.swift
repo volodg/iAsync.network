@@ -12,10 +12,10 @@ import iAsync_utils
 
 public class JHttpError : JNetworkError {
     
-    private let context: AnyObject
+    private let context: CustomStringConvertible
     private let httpCode: CFIndex
     
-    @objc public required init(httpCode: CFIndex, context: AnyObject) {
+    public required init(httpCode: CFIndex, context: CustomStringConvertible) {
         
         self.httpCode = httpCode
         self.context  = context
@@ -28,11 +28,6 @@ public class JHttpError : JNetworkError {
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
-        
-        return self.dynamicType.init(httpCode: httpCode, context: context)
     }
     
     func isHttpNotChangedError() -> Bool {

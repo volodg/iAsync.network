@@ -11,7 +11,7 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
-internal func downloadStatusCodeResponseAnalyzer(context: AnyObject) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer? {
+internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer? {
     
     return { (response: NSHTTPURLResponse) -> AsyncResult<NSHTTPURLResponse, NSError> in
         

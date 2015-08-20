@@ -12,8 +12,7 @@ import iAsync_utils
 
 public typealias JInputStreamBuilder = () -> NSInputStream
 
-//TODO should be struct
-public class URLConnectionParams : NSObject, CustomStringConvertible, NSCopying {
+public struct URLConnectionParams : CustomStringConvertible {
     
     public typealias HeadersType = [String:String]
     
@@ -26,7 +25,7 @@ public class URLConnectionParams : NSObject, CustomStringConvertible, NSCopying 
     public let httpBodyStreamBuilder    : JInputStreamBuilder?
     public let certificateCallback      : JShouldAcceptCertificateForHost?
     
-    required public init(
+    public init(
         url                      : NSURL,
         httpBody                 : NSData? = nil,
         httpMethod               : String? = nil,
@@ -44,19 +43,7 @@ public class URLConnectionParams : NSObject, CustomStringConvertible, NSCopying 
         self.certificateCallback       = certificateCallback
     }
     
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        
-        return self.dynamicType.init(
-            url                      : self.url,
-            httpBody                 : self.httpBody,
-            httpMethod               : self.httpMethod,
-            headers                  : self.headers,
-            totalBytesExpectedToWrite: self.totalBytesExpectedToWrite,
-            httpBodyStreamBuilder    : self.httpBodyStreamBuilder,
-            certificateCallback      : self.certificateCallback)
-    }
-    
-    public override var description: String {
+    public var description: String {
         
         let bodyStr: String
         if let httpBody = httpBody?.toString() {
