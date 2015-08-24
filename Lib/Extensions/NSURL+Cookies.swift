@@ -20,7 +20,7 @@ public extension NSURL {
             }
         }
         
-        NSLog(cookiesLog)
+        println(cookiesLog)
     }
     
     func removeCookies() {
