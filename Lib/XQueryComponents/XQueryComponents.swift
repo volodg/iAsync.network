@@ -21,9 +21,9 @@ public struct XQueryComponents {
             let encodedKey = key.stringByEncodingURLQueryComponents()
             
             if values.count > 0 {
-
-                for value in values {
                 
+                for value in values {
+                    
                     let encodedValue = value.stringByEncodingURLQueryComponents()
                     result.append("\(encodedKey)=\(encodedValue)")
                 }
@@ -33,7 +33,7 @@ public struct XQueryComponents {
             }
         }
         
-        return queryComponentSeparator.join(result)
+        return result.joinWithSeparator(queryComponentSeparator)
     }
     
     static public func toData(components: [String:[String]]) -> NSData
