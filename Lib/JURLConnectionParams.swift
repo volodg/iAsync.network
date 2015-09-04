@@ -12,13 +12,26 @@ import iAsync_utils
 
 public typealias JInputStreamBuilder = () -> NSInputStream
 
-public struct URLConnectionParams : CustomStringConvertible {
+public enum HttpMethod : String {
+    
+    case CONNECT = "CONNECT"
+    case DELETE  = "DELETE"
+    case GET     = "GET"
+    case HEAD    = "HEAD"
+    case OPTIONS = "OPTIONS"
+    case PATCH   = "PATCH"
+    case POST    = "POST"
+    case PUT     = "PUT"
+    case TRACE   = "TRACE"
+}
+
+public struct URLConnectionParams : Printable {
     
     public typealias HeadersType = [String:String]
     
     public let url       : NSURL
     public let httpBody  : NSData?
-    public let httpMethod: String?
+    public let httpMethod: HttpMethod
     public let headers   : HeadersType?
     
     public let totalBytesExpectedToWrite: Int64
@@ -28,7 +41,7 @@ public struct URLConnectionParams : CustomStringConvertible {
     public init(
         url                      : NSURL,
         httpBody                 : NSData? = nil,
-        httpMethod               : String? = nil,
+        httpMethod               : HttpMethod? = nil,
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
         httpBodyStreamBuilder    : JInputStreamBuilder? = nil,
@@ -36,7 +49,7 @@ public struct URLConnectionParams : CustomStringConvertible {
     {
         self.url        = url
         self.httpBody   = httpBody
-        self.httpMethod = httpMethod
+        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .POST : .GET)
         self.headers    = headers
         self.totalBytesExpectedToWrite = totalBytesExpectedToWrite
         self.httpBodyStreamBuilder     = httpBodyStreamBuilder
