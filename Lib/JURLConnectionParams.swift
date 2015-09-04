@@ -12,24 +12,37 @@ import iAsync_utils
 
 public typealias JInputStreamBuilder = () -> NSInputStream
 
+public enum HttpMethod : String {
+    
+    case CONNECT = "CONNECT"
+    case DELETE  = "DELETE"
+    case GET     = "GET"
+    case HEAD    = "HEAD"
+    case OPTIONS = "OPTIONS"
+    case PATCH   = "PATCH"
+    case POST    = "POST"
+    case PUT     = "PUT"
+    case TRACE   = "TRACE"
+}
+
 //TODO should be struct
-public class URLConnectionParams : NSObject, Printable, NSCopying {
+public struct URLConnectionParams : Printable {
     
     public typealias HeadersType = [String:String]
     
     public let url       : NSURL
     public let httpBody  : NSData?
-    public let httpMethod: String?
+    public let httpMethod: HttpMethod
     public let headers   : HeadersType?
     
     public let totalBytesExpectedToWrite: Int64
     public let httpBodyStreamBuilder    : JInputStreamBuilder?
     public let certificateCallback      : JShouldAcceptCertificateForHost?
     
-    required public init(
+    public init(
         url                      : NSURL,
         httpBody                 : NSData? = nil,
-        httpMethod               : String? = nil,
+        httpMethod               : HttpMethod? = nil,
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
         httpBodyStreamBuilder    : JInputStreamBuilder? = nil,
@@ -37,26 +50,14 @@ public class URLConnectionParams : NSObject, Printable, NSCopying {
     {
         self.url        = url
         self.httpBody   = httpBody
-        self.httpMethod = httpMethod
+        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .POST : .GET)
         self.headers    = headers
         self.totalBytesExpectedToWrite = totalBytesExpectedToWrite
         self.httpBodyStreamBuilder     = httpBodyStreamBuilder
         self.certificateCallback       = certificateCallback
     }
     
-    public func copyWithZone(zone: NSZone) -> AnyObject {
-        
-        return self.dynamicType(
-            url                      : self.url,
-            httpBody                 : self.httpBody,
-            httpMethod               : self.httpMethod,
-            headers                  : self.headers,
-            totalBytesExpectedToWrite: self.totalBytesExpectedToWrite,
-            httpBodyStreamBuilder    : self.httpBodyStreamBuilder,
-            certificateCallback      : self.certificateCallback)
-    }
-    
-    public override var description: String {
+    public var description: String {
         
         let bodyStr: String
         if let httpBody = httpBody?.toString() {

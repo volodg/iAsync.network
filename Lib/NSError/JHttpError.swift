@@ -12,10 +12,10 @@ import iAsync_utils
 
 public class JHttpError : JNetworkError {
     
-    private let context: AnyObject
+    private let context: Printable
     private let httpCode: CFIndex
     
-    @objc public required init(httpCode: CFIndex, context: AnyObject) {
+    public required init(httpCode: CFIndex, context: Printable) {
         
         self.httpCode = httpCode
         self.context  = context

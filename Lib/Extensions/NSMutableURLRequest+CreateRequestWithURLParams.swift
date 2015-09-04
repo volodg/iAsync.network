@@ -9,31 +9,22 @@
 import Foundation
 
 extension NSMutableURLRequest {
-
-     convenience init(params: URLConnectionParams) {
     
-        let inputStream = { () -> NSInputStream? in
-            
-            if let factory = params.httpBodyStreamBuilder {
-                return factory()
-            }
-            return nil
-        }()
-    
+    convenience init(params: URLConnectionParams) {
+        
+        let inputStream: NSInputStream?
+        if let factory = params.httpBodyStreamBuilder {
+            inputStream = factory()
+        } else {
+            inputStream = nil
+        }
+        
         assert(!((params.httpBody != nil) && (inputStream != nil)))
-    
+        
         self.init(
             URL: params.url,
-            cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
+            cachePolicy: .ReloadIgnoringLocalCacheData,
             timeoutInterval: 60.0)
-        
-        let httpMethod = { () -> String in
-            
-            if params.httpMethod == nil && (params.httpBody != nil || inputStream != nil) {
-                return "POST"
-            }
-            return params.httpMethod ?? "GET"
-        }()
         
         self.HTTPBodyStream = inputStream
         if let httpBody = params.httpBody {
@@ -41,6 +32,6 @@ extension NSMutableURLRequest {
         }
         
         self.allHTTPHeaderFields = params.headers
-        self.HTTPMethod          = httpMethod
+        self.HTTPMethod          = params.httpMethod.rawValue
     }
 }
