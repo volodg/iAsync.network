@@ -25,7 +25,6 @@ public enum HttpMethod : String {
     case TRACE   = "TRACE"
 }
 
-//TODO should be struct
 public struct URLConnectionParams : Printable {
     
     public typealias HeadersType = [String:String]
