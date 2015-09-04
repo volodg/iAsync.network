@@ -25,7 +25,7 @@ public enum HttpMethod : String {
     case TRACE   = "TRACE"
 }
 
-public struct URLConnectionParams : Printable {
+public struct URLConnectionParams : CustomStringConvertible {
     
     public typealias HeadersType = [String:String]
     
