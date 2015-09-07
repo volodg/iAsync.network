@@ -22,12 +22,12 @@ extension NSMutableURLRequest {
         assert(!((params.httpBody != nil) && (inputStream != nil)))
         
         self.init(
-            URL: params.url,
-            cachePolicy: .ReloadIgnoringLocalCacheData,
+            URL            : params.url,
+            cachePolicy    : .ReloadIgnoringLocalCacheData,
             timeoutInterval: 60.0)
         
         self.HTTPBodyStream = inputStream
-        if let httpBody = params.httpBody {
+        if params.httpBody != nil {
             self.HTTPBody = params.httpBody
         }
         
