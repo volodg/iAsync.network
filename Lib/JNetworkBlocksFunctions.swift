@@ -95,12 +95,12 @@ public func dataWithRespURLParamsLoader(
                 //NSLog("done url: \(params.url)")
                 
                 switch result {
-                case let .Success(value):
+                case .Success(let value):
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
                     finishCallback(result: AsyncResult.success((value, responseData)))
-                case let .Failure(error):
+                case .Failure(let error):
                     finishCallback(result: AsyncResult.failure(error))
                 case .Interrupted:
                     finishCallback(result: .Interrupted)
