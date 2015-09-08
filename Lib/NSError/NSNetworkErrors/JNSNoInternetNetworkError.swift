@@ -22,7 +22,7 @@ public class JNSNoInternetNetworkError : JNSNetworkError {
             comment:"")
     }
     
-    override public func writeErrorWithJLogger() {
+    override public func writeErrorWithLogger() {
         writeErrorToNSLog()
     }
 }
