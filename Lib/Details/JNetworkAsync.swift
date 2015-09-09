@@ -126,7 +126,7 @@ internal class JNetworkAsync : JAsyncInterface {
         connection.start()
     }
     
-    func doTask(task: JAsyncHandlerTask) {
+    func doTask(task: AsyncHandlerTask) {
         
         if let connection = connection {
             
