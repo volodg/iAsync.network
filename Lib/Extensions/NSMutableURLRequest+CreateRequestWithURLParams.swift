@@ -27,7 +27,7 @@ extension NSMutableURLRequest {
             timeoutInterval: 60.0)
         
         self.HTTPBodyStream = inputStream
-        if let httpBody = params.httpBody {
+        if params.httpBody != nil {
             self.HTTPBody = params.httpBody
         }
         

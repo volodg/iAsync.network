@@ -73,8 +73,6 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
             return nativeConnection
         }
             
-        let request = NSMutableURLRequest(params: params)
-        
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
         let queue = NSOperationQueue.currentQueue()
