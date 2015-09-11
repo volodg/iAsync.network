@@ -44,16 +44,16 @@ internal func privateGenericChunkedURLResponseLoader(
     params params: URLConnectionParams,
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
-    let factory = { () -> JNetworkAsync in
+    let factory = { () -> NetworkAsync in
         
-        let asyncObj = JNetworkAsync(
-            params:params,
-            responseAnalyzer:responseAnalyzer,
-            errorTransformer:networkErrorAnalyzer(params))
+        let asyncObj = NetworkAsync(
+            params          : params,
+            responseAnalyzer: responseAnalyzer,
+            errorTransformer: networkErrorAnalyzer(params))
         return asyncObj
     }
     
-    let loader = JAsyncBuilder.buildWithAdapterFactory(factory)
+    let loader = AsyncBuilder.buildWithAdapterFactory(factory)
     return loader
 }
 

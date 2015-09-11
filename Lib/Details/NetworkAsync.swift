@@ -1,5 +1,5 @@
 //
-//  JNetworkAsync.swift
+//  NetworkAsync.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -13,7 +13,7 @@ import iAsync_utils
 
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
-internal class JNetworkAsync : JAsyncInterface {
+internal class NetworkAsync : AsyncInterface {
 
     typealias ErrorT = NSError
     typealias ValueT = NSHTTPURLResponse
