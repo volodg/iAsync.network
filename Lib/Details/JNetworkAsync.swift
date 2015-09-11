@@ -82,13 +82,13 @@ internal class JNetworkAsync : JAsyncInterface {
                 return
             }
             
-            finishCallback(result: AsyncResult.success(resultHolder!))
+            finishCallback(result: .Success(resultHolder!))
         }
         
         let finish = { (error: NSError?) -> Void in
             
             if let error = error {
-                finishWithError(AsyncResult.failure(error))
+                finishWithError(.Failure(error))
             } else {
                 finishWithError(nil)
             }

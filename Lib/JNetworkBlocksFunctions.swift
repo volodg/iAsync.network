@@ -19,10 +19,10 @@ internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertibl
         
         if JHttpFlagChecker.isDownloadErrorFlag(statusCode) {
             let httpError = JHttpError(httpCode:statusCode, context:context)
-            return AsyncResult.failure(httpError)
+            return .Failure(httpError)
         }
         
-        return AsyncResult.success(response)
+        return .Success(response)
     }
 }
 
@@ -99,9 +99,9 @@ public func dataWithRespURLParamsLoader(
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: AsyncResult.success((value, responseData)))
+                    finishCallback(result: .Success((value, responseData)))
                 case .Failure(let error):
-                    finishCallback(result: AsyncResult.failure(error))
+                    finishCallback(result: .Failure(error))
                 case .Interrupted:
                     finishCallback(result: .Interrupted)
                 case .Unsubscribed:
