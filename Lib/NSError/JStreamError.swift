@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-public class JStreamError : JNetworkError {
+final public class JStreamError : JNetworkError {
     
     let streamError: CFStreamError
     private let context: NSCopying

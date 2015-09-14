@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class JFormDataBuilder : NSObject {
+final public class JFormDataBuilder : NSObject {
     
-    public class func formDataForParams(boundary: String, dictWithParam: [String:String], ending: String = "--") -> NSData
+    public static func formDataForParams(boundary: String, dictWithParam: [String:String], ending: String = "--") -> NSData
     {
         let result = NSMutableData();
         
@@ -50,7 +50,7 @@ public class JFormDataBuilder : NSObject {
         return result.copy() as! NSData;
     }
     
-    public class func tmpFileForUploadStreamWithDataForFilePath(
+    public static func tmpFileForUploadStreamWithDataForFilePath(
         dataFilePath : String,
         boundary     : String,
         name         : String,

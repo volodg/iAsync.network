@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class JNetworkResponseDataCallback {
+final public class JNetworkResponseDataCallback {
     
     public let dataChunk: NSData
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
+final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
 
     private let params: URLConnectionParams
     

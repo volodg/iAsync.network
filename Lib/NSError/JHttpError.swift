@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-public class JHttpError : JNetworkError {
+final public class JHttpError : JNetworkError {
     
     private let context: CustomStringConvertible
     private let httpCode: CFIndex

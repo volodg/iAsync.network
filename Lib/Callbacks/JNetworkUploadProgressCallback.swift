@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
+final public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
     
     public let params  : URLConnectionParams
     public let progress: Double

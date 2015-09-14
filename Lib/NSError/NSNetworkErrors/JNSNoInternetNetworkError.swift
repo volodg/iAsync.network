@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class JNSNoInternetNetworkError : JNSNetworkError {
+final public class JNSNoInternetNetworkError : JNSNetworkError {
     
     override class func isMineNSNetworkError(error: NSError) -> Bool {
         return error.isNetworkError

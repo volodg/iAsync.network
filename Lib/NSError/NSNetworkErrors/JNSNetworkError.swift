@@ -35,7 +35,7 @@ public class JNSNetworkError : JNetworkError {
             comment:"")
     }
     
-    public class func createJNSNetworkErrorWithContext(
+    public static func createJNSNetworkErrorWithContext(
         context: URLConnectionParams, nativeError: NSError) -> JNSNetworkError {
         
         var selfType: JNSNetworkError.Type!

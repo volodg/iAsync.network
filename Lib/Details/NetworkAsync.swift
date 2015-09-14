@@ -13,7 +13,7 @@ import iAsync_utils
 
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
-internal class NetworkAsync : AsyncInterface {
+final internal class NetworkAsync : AsyncInterface {
 
     typealias ErrorT = NSError
     typealias ValueT = NSHTTPURLResponse

@@ -10,7 +10,7 @@ import Foundation
 
 public extension NSMutableData {
 
-    class func dataForHTTPPostWithData(data: NSData, fileName: String, parameterName: String, boundary: String) -> Self {
+    static func dataForHTTPPostWithData(data: NSData, fileName: String, parameterName: String, boundary: String) -> Self {
         
         let result = self.init(capacity: data.length + 512)!
         
