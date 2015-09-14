@@ -8,6 +8,7 @@
 
 import Foundation
 
+//TODO remove - NSObject
 public class JAbstractConnection : NSObject, JURLConnection {
     
     public func start() {
