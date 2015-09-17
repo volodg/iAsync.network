@@ -12,7 +12,7 @@ final public class JFormDataBuilder : NSObject {
     
     public static func formDataForParams(boundary: String, dictWithParam: [String:String], ending: String = "--") -> NSData
     {
-        let result = NSMutableData();
+        let result = NSMutableData()
         
         for (key, value) in dictWithParam {
             
@@ -23,20 +23,20 @@ final public class JFormDataBuilder : NSObject {
                     let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
                     result.appendData(boundaryData)
                 }
-                //[self appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                //[self appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
                 
                 autoreleasepool {
                     let contentDisposition = "Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n"
                     let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
                     result.appendData(contentDispositionData)
                 }
-                //[self appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]];
+                //[self appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]]
                 
                 autoreleasepool {
                     let valueData = "\(value)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
                     result.appendData(valueData)
                 }
-                //[self appendData:[[obj description] dataUsingEncoding:NSUTF8StringEncoding]];
+                //[self appendData:[[obj description] dataUsingEncoding:NSUTF8StringEncoding]]
             }
         }
         
@@ -45,9 +45,9 @@ final public class JFormDataBuilder : NSObject {
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
             result.appendData(boundaryData)
         }
-        //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
         
-        return result.copy() as! NSData;
+        return result.copy() as! NSData
     }
     
     public static func tmpFileForUploadStreamWithDataForFilePath(
@@ -71,7 +71,7 @@ final public class JFormDataBuilder : NSObject {
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(boundaryData.bytes, 1, boundaryData.length, file)
         }
-        //[result appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[result appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
         
         autoreleasepool {
             
@@ -79,15 +79,15 @@ final public class JFormDataBuilder : NSObject {
             let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(contentDispositionData.bytes, 1, contentDispositionData.length, file)
         }
-        //[result appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", parameter, fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[result appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", parameter, fileName] dataUsingEncoding:NSUTF8StringEncoding]]
         
         autoreleasepool {
             let contentTypeStr  = contentType ?? "application/octet-stream"
-            let contentTypeSrv  = "Content-Type: \(contentTypeStr)\r\n\r\n";
+            let contentTypeSrv  = "Content-Type: \(contentTypeStr)\r\n\r\n"
             let contentTypeData = contentTypeSrv.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(contentTypeData.bytes, 1, contentTypeData.length, file)
         }
-        //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]
         
         autoreleasepool {
             
@@ -109,9 +109,9 @@ final public class JFormDataBuilder : NSObject {
                 }
             })
             
-            fclose(uploadDataFile);
+            fclose(uploadDataFile)
         }
-        //[result appendData:data];
+        //[result appendData:data]
         
         autoreleasepool {
             
@@ -119,7 +119,7 @@ final public class JFormDataBuilder : NSObject {
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(boundaryData.bytes, 1, boundaryData.length, file)
         }
-        //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
         
         if let dictWithParam = dictWithParam {
         
