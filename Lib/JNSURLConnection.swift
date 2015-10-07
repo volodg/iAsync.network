@@ -75,6 +75,8 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
         
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         
+        configuration.timeoutIntervalForResource = 120.0 //TODO move to params
+        
         let queue = NSOperationQueue.currentQueue()
         
         if queue == nil {
@@ -87,6 +89,7 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
             delegateQueue: queue)
         
         _nativeConnection = nativeConnection
+        
         return nativeConnection
     }
     
