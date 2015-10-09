@@ -11,6 +11,35 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
+public struct NetworkResponse : CustomStringConvertible {
+    
+    public let params      : URLConnectionParams
+    public let response    : NSHTTPURLResponse
+    public let responseData: NSData
+    
+    public var description: String {
+        
+        let responseStr: String
+        if let response = responseData.toString() {
+            responseStr = response
+        } else {
+            responseStr = "(???)"
+        }
+        
+        return "<NetworkResponse: params:\(params) response:\(response) responseData:\(responseStr)>"
+    }
+    
+    public init(
+        params      : URLConnectionParams,
+        response    : NSHTTPURLResponse,
+        responseData: NSData)
+    {
+        self.params       = params
+        self.response     = response
+        self.responseData = responseData
+    }
+}
+
 internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer? {
     
     return { (response: NSHTTPURLResponse) -> AsyncResult<NSHTTPURLResponse, NSError> in
@@ -62,14 +91,14 @@ func genericChunkedURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<
     return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: nil)
 }
 
-public func dataWithRespURLParamsLoader(
+public func genericDataURLResponseLoader(
     params params: URLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NetworkResponse, NSError>.Async
 {
     return { (
         progressCallback: AsyncProgressCallback?,
         stateCallback   : AsyncChangeStateCallback?,
-        finishCallback  : AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.DidFinishAsyncCallback?) -> JAsyncHandler in
+        finishCallback  : AsyncTypes<NetworkResponse, NSError>.DidFinishAsyncCallback?) -> JAsyncHandler in
         
         let loader = privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: responseAnalyzer)
         
@@ -99,7 +128,8 @@ public func dataWithRespURLParamsLoader(
                     if responseData.length == 0 {
                         NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
-                    finishCallback(result: .Success((value, responseData)))
+                    let result = NetworkResponse(params: params, response: value, responseData: responseData)
+                    finishCallback(result: .Success(result))
                 case .Failure(let error):
                     finishCallback(result: .Failure(error))
                 case .Interrupted:
@@ -115,12 +145,6 @@ public func dataWithRespURLParamsLoader(
             stateCallback   : stateCallback,
             finishCallback  : doneCallbackWrapper)
     }
-}
-
-public func genericDataURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<NSData, NSError>.Async
-{
-    let loader = dataWithRespURLParamsLoader(params: params, responseAnalyzer: nil)
-    return bindSequenceOfAsyncs(loader, { async(value: $0.1) } )
 }
 
 func chunkedURLResponseLoader(
@@ -143,7 +167,7 @@ func chunkedURLResponseLoader(
 public func dataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NetworkResponse, NSError>.Async
 {
     let params = URLConnectionParams(
         url                      : url,
@@ -154,14 +178,13 @@ public func dataURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    let loader = dataWithRespURLParamsLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
-    return bindSequenceOfAsyncs(loader, { async(value: $0.1) } )
+    return genericDataURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
 }
 
 public func perkyDataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NSData, NSError>.Async
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NetworkResponse, NSError>.Async
 {
     let params = URLConnectionParams(
         url                      : url,
@@ -172,22 +195,5 @@ public func perkyDataURLResponseLoader(
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
     
-    return genericDataURLResponseLoader(params)
-}
-
-public func perkyURLResponseLoader(
-    url     : NSURL,
-    postData: NSData?,
-    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<(NSHTTPURLResponse, NSData), NSError>.Async
-{
-    let params = URLConnectionParams(
-        url                      : url,
-        httpBody                 : postData,
-        httpMethod               : nil,
-        headers                  : headers,
-        totalBytesExpectedToWrite: 0,
-        httpBodyStreamBuilder    : nil,
-        certificateCallback      : nil)
-    
-    return dataWithRespURLParamsLoader(params: params, responseAnalyzer: nil)
+    return genericDataURLResponseLoader(params: params, responseAnalyzer: nil)
 }
