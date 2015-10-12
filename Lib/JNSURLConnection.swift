@@ -8,8 +8,24 @@
 
 import Foundation
 
-final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
+//TODO remove NSObject inheritance
+final public class JNSURLConnection : NSObject, NSURLSessionDelegate {
 
+    func clearCallbacks() {
+        
+        didReceiveResponseBlock      = nil
+        didReceiveDataBlock          = nil
+        didFinishLoadingBlock        = nil
+        didUploadDataBlock           = nil
+        shouldAcceptCertificateBlock = nil
+    }
+    
+    public var didReceiveResponseBlock     : JDidReceiveResponseHandler?
+    public var didReceiveDataBlock         : JDidReceiveDataHandler?
+    public var didFinishLoadingBlock       : JDidFinishLoadingHandler?
+    public var didUploadDataBlock          : JDidUploadDataHandler?
+    public var shouldAcceptCertificateBlock: JShouldAcceptCertificateForHost?
+    
     private let params: URLConnectionParams
     
     public init(params: URLConnectionParams)
@@ -19,7 +35,7 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
     
     private var sessionTask: NSURLSessionTask?
     
-    public override func start() {
+    public func start() {
         
         if params.url.fileURL {
             let path = params.url.path
@@ -34,7 +50,7 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
         task.resume()
     }
     
-    public override func cancel() {
+    public func cancel() {
         
         clearCallbacks()
         if let nativeConnection = _nativeConnection {
@@ -46,7 +62,7 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
     }
     
     private var _downloadedBytesCount: Int64 = 0
-    private(set) public override var downloadedBytesCount: Int64 {
+    private(set) public var downloadedBytesCount: Int64 {
         get {
             return _downloadedBytesCount
         }
@@ -56,7 +72,7 @@ final public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate 
     }
     
     private var _totalBytesCount: Int64 = 0
-    private(set) public override var totalBytesCount: Int64 {
+    private(set) public var totalBytesCount: Int64 {
         get {
             return _totalBytesCount
         }

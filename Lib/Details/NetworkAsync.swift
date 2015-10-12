@@ -22,7 +22,7 @@ final internal class NetworkAsync : AsyncInterface {
     private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?
     private let errorTransformer: JNetworkErrorTransformer?
     
-    private var connection : JURLConnection?
+    private var connection : JNSURLConnection?
     
     init(
         params          : URLConnectionParams,
