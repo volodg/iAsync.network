@@ -1,5 +1,5 @@
 //
-//  JNetworkBlocksFunctions.swift
+//  NetworkBlocksFunctions.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -40,14 +40,14 @@ public struct NetworkResponse : CustomStringConvertible {
     }
 }
 
-internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer? {
+internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer? {
     
     return { (response: NSHTTPURLResponse) -> AsyncResult<NSHTTPURLResponse, NSError> in
         
         let statusCode = response.statusCode
         
-        if JHttpFlagChecker.isDownloadErrorFlag(statusCode) {
-            let httpError = JHttpError(httpCode:statusCode, context:context)
+        if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
+            let httpError = HttpError(httpCode:statusCode, context:context)
             return .Failure(httpError)
         }
         
@@ -59,11 +59,11 @@ internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErro
     
     return { (error: NSError) -> NSError in
         
-        if let error = error as? JNetworkError {
+        if let error = error as? NetworkError {
             return error
         }
         
-        let resultError = JNSNetworkError.createJNSNetworkErrorWithContext(context, nativeError: error)
+        let resultError = NSNetworkError.createJNSNetworkErrorWithContext(context, nativeError: error)
         
         return resultError
     }
@@ -71,7 +71,7 @@ internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErro
 
 internal func privateGenericChunkedURLResponseLoader(
     params params: URLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
     let factory = { () -> NetworkAsync in
         
@@ -93,7 +93,7 @@ func genericChunkedURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<
 
 public func genericDataURLResponseLoader(
     params params: URLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.JAnalyzer?) -> AsyncTypes<NetworkResponse, NSError>.Async
+    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer?) -> AsyncTypes<NetworkResponse, NSError>.Async
 {
     return { (
         progressCallback: AsyncProgressCallback?,
@@ -105,7 +105,7 @@ public func genericDataURLResponseLoader(
         let responseData = NSMutableData()
         let dataProgressCallback = { (progressInfo: AnyObject) -> () in
             
-            if let progressInfo = progressInfo as? JNetworkResponseDataCallback {
+            if let progressInfo = progressInfo as? NetworkResponseDataCallback {
                 
                 responseData.appendData(progressInfo.dataChunk)
             }

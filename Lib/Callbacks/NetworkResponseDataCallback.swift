@@ -1,5 +1,5 @@
 //
-//  JNetworkResponseDataCallback.swift
+//  NetworkResponseDataCallback.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class JNetworkResponseDataCallback {
+final public class NetworkResponseDataCallback {
     
     public let dataChunk: NSData
     

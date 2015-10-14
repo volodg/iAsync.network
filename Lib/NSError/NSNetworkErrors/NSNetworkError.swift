@@ -1,6 +1,6 @@
 //
-//  JNSNetworkError.swift
-//  Wishdates
+//  NSNetworkError.swift
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 18.08.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-public class JNSNetworkError : JNetworkError {
+public class NSNetworkError : NetworkError {
     
     let context: URLConnectionParams
     let nativeError: NSError
@@ -36,17 +36,17 @@ public class JNSNetworkError : JNetworkError {
     }
     
     public static func createJNSNetworkErrorWithContext(
-        context: URLConnectionParams, nativeError: NSError) -> JNSNetworkError {
+        context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
         
-        var selfType: JNSNetworkError.Type!
+        var selfType: NSNetworkError.Type!
         
         //select class for error
-        let errorClasses: [JNSNetworkError.Type] =
+        let errorClasses: [NSNetworkError.Type] =
         [
-            JNSNoInternetNetworkError.self
+            NSNoInternetNetworkError.self
         ]
         
-        selfType = { () -> JNSNetworkError.Type! in
+        selfType = { () -> NSNetworkError.Type! in
             
             if let index = errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }) {
                 return errorClasses[index]
@@ -55,7 +55,7 @@ public class JNSNetworkError : JNetworkError {
         }()
         
         if selfType == nil {
-            selfType = JNSNetworkError.self
+            selfType = NSNetworkError.self
         }
         
         return selfType.init(context: context, nativeError: nativeError)

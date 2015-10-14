@@ -1,5 +1,5 @@
 //
-//  JFormDataBuilder.swift
+//  FormDataBuilder.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 25.09.14.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class JFormDataBuilder : NSObject {
+final public class FormDataBuilder : NSObject {
     
     public static func formDataForParams(boundary: String, dictWithParam: [String:String], ending: String = "--") -> NSData
     {

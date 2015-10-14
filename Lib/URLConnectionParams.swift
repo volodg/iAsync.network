@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-public typealias JInputStreamBuilder = () -> NSInputStream
+public typealias InputStreamBuilder = () -> NSInputStream
 
 public enum HttpMethod : String {
     
@@ -35,8 +35,8 @@ public struct URLConnectionParams : CustomStringConvertible {
     public let headers   : HeadersType?
     
     public let totalBytesExpectedToWrite: Int64
-    public let httpBodyStreamBuilder    : JInputStreamBuilder?
-    public let certificateCallback      : JShouldAcceptCertificateForHost?
+    public let httpBodyStreamBuilder    : InputStreamBuilder?
+    public let certificateCallback      : ShouldAcceptCertificateForHost?
     
     public init(
         url                      : NSURL,
@@ -44,8 +44,8 @@ public struct URLConnectionParams : CustomStringConvertible {
         httpMethod               : HttpMethod? = nil,
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
-        httpBodyStreamBuilder    : JInputStreamBuilder? = nil,
-        certificateCallback      : JShouldAcceptCertificateForHost? = nil)
+        httpBodyStreamBuilder    : InputStreamBuilder? = nil,
+        certificateCallback      : ShouldAcceptCertificateForHost? = nil)
     {
         self.url        = url
         self.httpBody   = httpBody

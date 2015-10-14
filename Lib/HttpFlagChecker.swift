@@ -1,5 +1,5 @@
 //
-//  JHttpFlagChecker.swift
+//  HttpFlagChecker.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -12,8 +12,8 @@ import iAsync_utils
 
 private let indexes = Set([301, 302, 303, 307])
 
-final public class JHttpFlagChecker {
-
+final public class HttpFlagChecker {
+    
     public static func isDownloadErrorFlag(statusCode: Int) -> Bool {
         
         let result =
@@ -24,7 +24,7 @@ final public class JHttpFlagChecker {
     }
     
     public static func isRedirectFlag(statusCode: Int) -> Bool {
-    
+        
         return indexes.contains(statusCode)
     }
     

@@ -19,14 +19,14 @@ final internal class NetworkAsync : AsyncInterface {
     typealias ValueT = NSHTTPURLResponse
     
     private let params          : URLConnectionParams
-    private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?
+    private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.Analyzer?
     private let errorTransformer: JNetworkErrorTransformer?
     
-    private var connection : JNSURLConnection?
+    private var connection : NSURLSessionConnection?
     
     init(
         params          : URLConnectionParams,
-        responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.JAnalyzer?,
+        responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.Analyzer?,
         errorTransformer: JNetworkErrorTransformer?)
     {
         self.params           = params
@@ -39,7 +39,7 @@ final internal class NetworkAsync : AsyncInterface {
         stateCallback   : AsyncChangeStateCallback,
         progressCallback: AsyncProgressCallback)
     {
-        let connection  = JNSURLConnection(params: self.params)
+        let connection  = NSURLSessionConnection(params: self.params)
         self.connection = connection
         
         connection.shouldAcceptCertificateBlock = self.params.certificateCallback
@@ -48,7 +48,7 @@ final internal class NetworkAsync : AsyncInterface {
         
         connection.didReceiveDataBlock = { (dataChunk: NSData) -> () in
             
-            let progressData = JNetworkResponseDataCallback(
+            let progressData = NetworkResponseDataCallback(
                 dataChunk: dataChunk,
                 downloadedBytesCount: connection.downloadedBytesCount,
                 totalBytesCount: connection.totalBytesCount)
@@ -58,7 +58,7 @@ final internal class NetworkAsync : AsyncInterface {
         
         connection.didUploadDataBlock = { (progress: Double) -> () in
             
-            let uploadProgress = JNetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
+            let uploadProgress = NetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
             progressCallback(progressInfo: uploadProgress)
         }
         

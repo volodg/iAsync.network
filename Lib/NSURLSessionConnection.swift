@@ -1,5 +1,5 @@
 //
-//  JNSURLConnection.swift
+//  NSURLSessionConnection.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 25.09.14.
@@ -9,7 +9,7 @@
 import Foundation
 
 //TODO remove NSObject inheritance
-final public class JNSURLConnection : NSObject, NSURLSessionDelegate {
+final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
     func clearCallbacks() {
         
@@ -20,11 +20,11 @@ final public class JNSURLConnection : NSObject, NSURLSessionDelegate {
         shouldAcceptCertificateBlock = nil
     }
     
-    public var didReceiveResponseBlock     : JDidReceiveResponseHandler?
-    public var didReceiveDataBlock         : JDidReceiveDataHandler?
-    public var didFinishLoadingBlock       : JDidFinishLoadingHandler?
-    public var didUploadDataBlock          : JDidUploadDataHandler?
-    public var shouldAcceptCertificateBlock: JShouldAcceptCertificateForHost?
+    public var didReceiveResponseBlock     : DidReceiveResponseHandler?
+    public var didReceiveDataBlock         : DidReceiveDataHandler?
+    public var didFinishLoadingBlock       : DidFinishLoadingHandler?
+    public var didUploadDataBlock          : DidUploadDataHandler?
+    public var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
     
     private let params: URLConnectionParams
     

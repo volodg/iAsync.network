@@ -1,5 +1,5 @@
 //
-//  JUploadProgress.swift
+//  UploadProgress.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-protocol JUploadProgress : NSObjectProtocol {
+protocol UploadProgress : NSObjectProtocol {
     
     var progress: Double { get }
-    var url: NSURL { get }
-    var headers: NSDictionary? { get }
+    var url     : NSURL { get }
+    var headers : URLConnectionParams.HeadersType? { get }
 }

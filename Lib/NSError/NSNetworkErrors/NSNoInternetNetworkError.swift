@@ -1,6 +1,6 @@
 //
-//  JNSNoInternetNetworkError.swift
-//  Wishdates
+//  NSNoInternetNetworkError.swift
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 18.08.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class JNSNoInternetNetworkError : JNSNetworkError {
+final public class NSNoInternetNetworkError : NSNetworkError {
     
     override class func isMineNSNetworkError(error: NSError) -> Bool {
         return error.isNetworkError

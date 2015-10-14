@@ -1,5 +1,5 @@
 //
-//  JNetworkUploadProgressCallback.swift
+//  NetworkUploadProgressCallback.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 26.09.14.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
+final public class NetworkUploadProgressCallback : NSObject, UploadProgress {
     
     public let params  : URLConnectionParams
     public let progress: Double
@@ -17,7 +17,7 @@ final public class JNetworkUploadProgressCallback : NSObject, JUploadProgress {
         return params.url
     }
     
-    public var headers: NSDictionary? {
+    public var headers: URLConnectionParams.HeadersType? {
         return params.headers
     }
     

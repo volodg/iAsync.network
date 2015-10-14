@@ -1,6 +1,6 @@
 //
-//  JHttpError.swift
-//  Wishdates
+//  HttpError.swift
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 18.08.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-final public class JHttpError : JNetworkError {
+final public class HttpError : NetworkError {
     
     private let context: CustomStringConvertible
     private let httpCode: CFIndex

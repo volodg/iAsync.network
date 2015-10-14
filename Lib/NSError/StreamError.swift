@@ -1,6 +1,6 @@
 //
-//  JStreamError.swift
-//  Wishdates
+//  StreamError.swift
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 18.08.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -10,12 +10,12 @@ import Foundation
 
 import iAsync_utils
 
-final public class JStreamError : JNetworkError {
+final public class StreamError : NetworkError {
     
     let streamError: CFStreamError
-    private let context: NSCopying
+    private let context: CustomStringConvertible
     
-    required public init(streamError: CFStreamError, context: NSCopying) {
+    required public init(streamError: CFStreamError, context: CustomStringConvertible) {
         
         self.streamError = streamError
         self.context     = context
