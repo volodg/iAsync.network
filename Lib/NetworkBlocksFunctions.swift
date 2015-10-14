@@ -98,7 +98,7 @@ public func genericDataURLResponseLoader(
     return { (
         progressCallback: AsyncProgressCallback?,
         stateCallback   : AsyncChangeStateCallback?,
-        finishCallback  : AsyncTypes<NetworkResponse, NSError>.DidFinishAsyncCallback?) -> JAsyncHandler in
+        finishCallback  : AsyncTypes<NetworkResponse, NSError>.DidFinishAsyncCallback?) -> AsyncHandler in
         
         let loader = privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: responseAnalyzer)
         
