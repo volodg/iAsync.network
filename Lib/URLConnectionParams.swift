@@ -72,6 +72,6 @@ public struct URLConnectionParams : CustomStringConvertible {
             headersStr = "nil"
         }
         
-        return "<URLConnectionParams url:\(url), httpBody:\(bodyStr), headers:\(headersStr)>"
+        return "<URLConnectionParams url: \(url), httpBody: \(bodyStr), headers: \(headersStr)>"
     }
 }
