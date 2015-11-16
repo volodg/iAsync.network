@@ -134,9 +134,9 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         let strContentLength  = httpResponse.allHeaderFields["Content-Length"] as? NSNumber
         _totalBytesCount      = strContentLength?.longLongValue ?? 0
         _downloadedBytesCount = 0
-        
+
         didReceiveResponseBlock?(response: httpResponse)
-        
+
         completionHandler(.Allow)
     }
     

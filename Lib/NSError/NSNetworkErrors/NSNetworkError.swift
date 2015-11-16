@@ -53,23 +53,23 @@ public class NSNetworkError : NetworkError {
             }
             return nil
         }()
-        
+
         if selfType == nil {
             selfType = NSNetworkError.self
         }
-        
+
         return selfType.init(context: context, nativeError: nativeError)
     }
-    
+
     class func isMineNSNetworkError(error: NSError) -> Bool {
         return false
     }
-    
+
     public override func copyWithZone(zone: NSZone) -> AnyObject {
         
         return self.dynamicType.init(context: context, nativeError: nativeError)
     }
-    
+
     public override var errorLogDescription: String {
         
         return "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
