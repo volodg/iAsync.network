@@ -74,7 +74,7 @@ final public class FormDataBuilder : NSObject {
         //[result appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
         
         autoreleasepool {
-            
+
             let contentDisposition = "Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(fileName)\"\r\n"
             let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
             fwrite(contentDispositionData.bytes, 1, contentDispositionData.length, file)
@@ -90,9 +90,9 @@ final public class FormDataBuilder : NSObject {
         //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]
         
         autoreleasepool {
-            
+
             let uploadDataFile = fopen(dataFilePath.cStringUsingEncoding(NSUTF8StringEncoding)!, "r")
-            
+
             let bufferLength = 10*1024
             var array = Array<UInt8>(count: Int(bufferLength), repeatedValue: 0)
             
