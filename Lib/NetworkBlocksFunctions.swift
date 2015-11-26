@@ -112,17 +112,17 @@ public func genericDataURLResponseLoader(
             
             progressCallback?(progressInfo: progressInfo)
         }
-        
-        //NSLog("start url: \(params.url)")
-        
+
+        //print("start params: \(params)")
+
         var doneCallbackWrapper: AsyncTypes<NSHTTPURLResponse, NSError>.DidFinishAsyncCallback?
         if let finishCallback = finishCallback {
-            
+
             doneCallbackWrapper = { (result: AsyncResult<NSHTTPURLResponse, NSError>) -> () in
-                
-                //NSLog("done url: \(params.url) response: \(responseData.toString())  \n \n")
+
+                //print("done params: \(params) response: \(responseData.toString())  \n \n")
                 //NSLog("done url: \(params.url)")
-                
+
                 switch result {
                 case .Success(let value):
                     if responseData.length == 0 {
@@ -139,7 +139,7 @@ public func genericDataURLResponseLoader(
                 }
             }
         }
-        
+
         return loader(
             progressCallback: dataProgressCallback,
             stateCallback   : stateCallback,
