@@ -33,11 +33,11 @@ public struct URLConnectionParams : CustomStringConvertible {
     public let httpBody  : NSData?
     public let httpMethod: HttpMethod
     public let headers   : HeadersType?
-    
+
     public let totalBytesExpectedToWrite: Int64
     public let httpBodyStreamBuilder    : InputStreamBuilder?
     public let certificateCallback      : ShouldAcceptCertificateForHost?
-    
+
     public init(
         url                      : NSURL,
         httpBody                 : NSData? = nil,
@@ -64,14 +64,14 @@ public struct URLConnectionParams : CustomStringConvertible {
         } else {
             bodyStr = "nil"
         }
-        
+
         let headersStr: String
         if let headers = headers?.description {
             headersStr = headers
         } else {
             headersStr = "nil"
         }
-        
+
         return "<URLConnectionParams url: \(url), httpBody: \(bodyStr), headers: \(headersStr)>"
     }
 }

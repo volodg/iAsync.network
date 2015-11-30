@@ -126,7 +126,7 @@ public func genericDataURLResponseLoader(
                 switch result {
                 case .Success(let value):
                     if responseData.length == 0 {
-                        NSLog("!!!WARNING!!! request with params: \(params) got an empty response")
+                        print("!!!WARNING!!! request with params: \(params) got an empty response")
                     }
                     let result = NetworkResponse(params: params, response: value, responseData: responseData)
                     finishCallback(result: .Success(result))
