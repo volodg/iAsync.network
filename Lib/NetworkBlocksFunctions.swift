@@ -12,23 +12,23 @@ import iAsync_async
 import iAsync_utils
 
 public struct NetworkResponse : CustomStringConvertible {
-    
+
     public let params      : URLConnectionParams
     public let response    : NSHTTPURLResponse
     public let responseData: NSData
-    
+
     public var description: String {
-        
+
         let responseStr: String
         if let response = responseData.toString() {
             responseStr = response
         } else {
             responseStr = "(???)"
         }
-        
-        return "<NetworkResponse: params:\(params) response:\(response) responseData:\(responseStr)>"
+
+        return "<NetworkResponse: params:\(params) response.allHeaderFields:\(response.allHeaderFields) response.statusCode:\(response.statusCode) responseData:\(responseStr)>"
     }
-    
+
     public init(
         params      : URLConnectionParams,
         response    : NSHTTPURLResponse,
