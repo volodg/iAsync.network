@@ -13,7 +13,7 @@ import iAsync_utils
 public typealias InputStreamBuilder = () -> NSInputStream
 
 public enum HttpMethod : String {
-    
+
     case CONNECT = "CONNECT"
     case DELETE  = "DELETE"
     case GET     = "GET"

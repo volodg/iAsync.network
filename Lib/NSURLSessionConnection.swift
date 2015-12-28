@@ -12,37 +12,37 @@ import Foundation
 final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
     func clearCallbacks() {
-        
+
         didReceiveResponseBlock      = nil
         didReceiveDataBlock          = nil
         didFinishLoadingBlock        = nil
         didUploadDataBlock           = nil
         shouldAcceptCertificateBlock = nil
     }
-    
+
     public var didReceiveResponseBlock     : DidReceiveResponseHandler?
     public var didReceiveDataBlock         : DidReceiveDataHandler?
     public var didFinishLoadingBlock       : DidFinishLoadingHandler?
     public var didUploadDataBlock          : DidUploadDataHandler?
     public var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
-    
+
     private let params: URLConnectionParams
-    
-    public init(params: URLConnectionParams)
-    {
+
+    public init(params: URLConnectionParams) {
+
         self.params = params
     }
-    
+
     private var sessionTask: NSURLSessionTask?
-    
+
     public func start() {
-        
+
         if params.url.fileURL {
             let path = params.url.path
             processLocalFileWithPath(path!)
             return
         }
-        
+
         let request = NSMutableURLRequest(params: params)
         let task    = nativeConnection.dataTaskWithRequest(request)
         sessionTask = task
@@ -60,7 +60,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
             nativeConnection.invalidateAndCancel()
         }
     }
-    
+
     private var _downloadedBytesCount: Int64 = 0
     private(set) public var downloadedBytesCount: Int64 {
         get {
@@ -83,18 +83,18 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     
     private var _nativeConnection: NSURLSession?
     private var nativeConnection: NSURLSession {
-        
+
         if let nativeConnection = _nativeConnection {
-            
+
             return nativeConnection
         }
-        
+
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        
+
         configuration.timeoutIntervalForResource = 120.0 //TODO move to params
-        
+
         let queue = NSOperationQueue.currentQueue()
-        
+
         if queue == nil {
             fatalError("queue should be determined")
         }
@@ -118,7 +118,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     }
     
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
-        
+
         if let error = error {
             finishLoading(error)
         }
@@ -186,10 +186,10 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void)
     {
         if let callback = shouldAcceptCertificateBlock {
-            
+
             callback(callback: completionHandler)
         } else {
-            
+
             let credentials = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
             completionHandler(.UseCredential, credentials)
         }
