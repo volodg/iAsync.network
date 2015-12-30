@@ -62,9 +62,9 @@ internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErro
         if let error = error as? NetworkError {
             return error
         }
-        
+
         let resultError = NSNetworkError.createJNSNetworkErrorWithContext(context, nativeError: error)
-        
+
         return resultError
     }
 }
@@ -106,10 +106,10 @@ public func genericDataURLResponseLoader(
         let dataProgressCallback = { (progressInfo: AnyObject) -> () in
             
             if let progressInfo = progressInfo as? NetworkResponseDataCallback {
-                
+
                 responseData.appendData(progressInfo.dataChunk)
             }
-            
+
             progressCallback?(progressInfo: progressInfo)
         }
 

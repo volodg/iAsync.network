@@ -37,21 +37,18 @@ public class NSNetworkError : NetworkError {
     
     public static func createJNSNetworkErrorWithContext(
         context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
-        
+
         var selfType: NSNetworkError.Type!
-        
+
         //select class for error
         let errorClasses: [NSNetworkError.Type] =
         [
             NSNoInternetNetworkError.self
         ]
-        
+
         selfType = { () -> NSNetworkError.Type! in
-            
-            if let index = errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }) {
-                return errorClasses[index]
-            }
-            return nil
+
+            return errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }).flatMap { errorClasses[$0] }
         }()
 
         if selfType == nil {

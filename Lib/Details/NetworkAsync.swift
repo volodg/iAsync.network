@@ -33,7 +33,7 @@ final internal class NetworkAsync : AsyncInterface {
         self.responseAnalyzer = responseAnalyzer
         self.errorTransformer = errorTransformer
     }
-    
+
     func asyncWithResultCallback(
         finishCallback  : AsyncTypes<ValueT, ErrorT>.DidFinishAsyncCallback,
         stateCallback   : AsyncChangeStateCallback,
@@ -41,68 +41,64 @@ final internal class NetworkAsync : AsyncInterface {
     {
         let connection  = NSURLSessionConnection(params: self.params)
         self.connection = connection
-        
+
         connection.shouldAcceptCertificateBlock = self.params.certificateCallback
-        
+
         unowned(unsafe) let unretainedSelf = self
-        
+
         connection.didReceiveDataBlock = { (dataChunk: NSData) -> () in
-            
+
             let progressData = NetworkResponseDataCallback(
                 dataChunk: dataChunk,
                 downloadedBytesCount: connection.downloadedBytesCount,
                 totalBytesCount: connection.totalBytesCount)
-            
+
             progressCallback(progressInfo: progressData)
         }
-        
+
         connection.didUploadDataBlock = { (progress: Double) -> () in
-            
+
             let uploadProgress = NetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
             progressCallback(progressInfo: uploadProgress)
         }
-        
+
         var resultHolder: ValueT?
-        
+
         let errorTransformer = self.errorTransformer
-        
+
         let finishWithError = { (error: AsyncResult<ValueT, ErrorT>?) -> () in
-        
+
             if let error = error {
-                
+
                 let passError = { () -> AsyncResult<ValueT, ErrorT> in
-                    
-                    if let errorTransformer = errorTransformer {
-                        return error.mapError(errorTransformer)
-                    }
-                    return error
+
+                    return errorTransformer.flatMap { error.mapError($0) } ?? error
                 }()
-                
+
                 finishCallback(result: passError)
                 return
             }
-            
+
             finishCallback(result: .Success(resultHolder!))
         }
-        
+
         let finish = { (error: NSError?) -> Void in
-            
+
             if let error = error {
                 finishWithError(.Failure(error))
             } else {
                 finishWithError(nil)
             }
         }
-        
+
         connection.didFinishLoadingBlock = finish
-        
+
         connection.didReceiveResponseBlock = { (response: NSHTTPURLResponse) -> () in
-            
-            
+
             if let responseAnalyzer = unretainedSelf.responseAnalyzer {
-                
+
                 let result = responseAnalyzer(object: response)
-                
+
                 switch result {
                 case .Success(let value):
                     resultHolder = value
@@ -118,24 +114,23 @@ final internal class NetworkAsync : AsyncInterface {
                 }
                 return
             }
-            
+
             resultHolder = response
-            
         }
-        
+
         connection.start()
     }
-    
+
     func doTask(task: AsyncHandlerTask) {
-        
+
         if let connection = connection {
-            
+
             connection.didReceiveDataBlock          = nil
             connection.didFinishLoadingBlock        = nil
             connection.didReceiveResponseBlock      = nil
             connection.didUploadDataBlock           = nil
             connection.shouldAcceptCertificateBlock = nil
-            
+
             //TODO maybe always cancel?
             if task == .Cancel {
                 connection.cancel()
@@ -143,12 +138,12 @@ final internal class NetworkAsync : AsyncInterface {
             }
         }
     }
-    
+
     private func forceCancel() {
-        
+
         doTask(.Cancel)
     }
-    
+
     var isForeignThreadResultCallback: Bool {
         return false
     }

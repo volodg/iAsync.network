@@ -55,22 +55,12 @@ public struct URLConnectionParams : CustomStringConvertible {
         self.httpBodyStreamBuilder     = httpBodyStreamBuilder
         self.certificateCallback       = certificateCallback
     }
-    
-    public var description: String {
-        
-        let bodyStr: String
-        if let httpBody = httpBody?.toString() {
-            bodyStr = httpBody
-        } else {
-            bodyStr = "nil"
-        }
 
-        let headersStr: String
-        if let headers = headers?.description {
-            headersStr = headers
-        } else {
-            headersStr = "nil"
-        }
+    public var description: String {
+
+        let bodyStr = httpBody?.toString() ?? "nil"
+
+        let headersStr = headers?.description ?? "nil"
 
         return "<URLConnectionParams url: \(url), httpBody: \(bodyStr), headers: \(headersStr)>"
     }

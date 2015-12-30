@@ -51,14 +51,15 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     }
     
     public func cancel() {
-        
+
         clearCallbacks()
-        if let nativeConnection = _nativeConnection {
-            sessionTask?.cancel()
-            sessionTask = nil
-            _nativeConnection = nil
-            nativeConnection.invalidateAndCancel()
-        }
+
+        guard let nativeConnection = _nativeConnection else { return }
+
+        sessionTask?.cancel()
+        sessionTask = nil
+        _nativeConnection = nil
+        nativeConnection.invalidateAndCancel()
     }
 
     private var _downloadedBytesCount: Int64 = 0
@@ -164,20 +165,19 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         totalBytesSent: Int64,
         totalBytesExpectedToSend: Int64)
     {
-        if let didUploadDataBlock = self.didUploadDataBlock {
-            
-            let totalBytesExpectedToWrite: Int64 = (totalBytesExpectedToSend == -1)
-                ?params.totalBytesExpectedToWrite
-                :Int64(totalBytesExpectedToSend)
-            
-            if totalBytesExpectedToWrite <= 0 {
-                
-                didUploadDataBlock(progress: 0)
-                return
-            }
-            
-            didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
+        guard let didUploadDataBlock = self.didUploadDataBlock else { return }
+
+        let totalBytesExpectedToWrite: Int64 = (totalBytesExpectedToSend == -1)
+            ?params.totalBytesExpectedToWrite
+            :Int64(totalBytesExpectedToSend)
+
+        if totalBytesExpectedToWrite <= 0 {
+
+            didUploadDataBlock(progress: 0)
+            return
         }
+
+        didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
     }
     
     public func URLSession(
