@@ -1,6 +1,6 @@
 //
-//  JNSURLConnection.swift
-//  JNetwork
+//  NSURLSessionConnection.swift
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 25.09.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -8,25 +8,41 @@
 
 import Foundation
 
-public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
+//TODO remove NSObject inheritance
+final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
-    private let params: JURLConnectionParams
-    
-    public init(params: JURLConnectionParams) {
-        
+    func clearCallbacks() {
+
+        didReceiveResponseBlock      = nil
+        didReceiveDataBlock          = nil
+        didFinishLoadingBlock        = nil
+        didUploadDataBlock           = nil
+        shouldAcceptCertificateBlock = nil
+    }
+
+    public var didReceiveResponseBlock     : DidReceiveResponseHandler?
+    public var didReceiveDataBlock         : DidReceiveDataHandler?
+    public var didFinishLoadingBlock       : DidFinishLoadingHandler?
+    public var didUploadDataBlock          : DidUploadDataHandler?
+    public var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
+
+    private let params: URLConnectionParams
+
+    public init(params: URLConnectionParams) {
+
         self.params = params
     }
-    
+
     private var sessionTask: NSURLSessionTask?
-    
-    public override func start() {
-        
+
+    public func start() {
+
         if params.url.fileURL {
             let path = params.url.path
             processLocalFileWithPath(path!)
             return
         }
-        
+
         let request = NSMutableURLRequest(params: params)
         let task    = nativeConnection.dataTaskWithRequest(request)
         sessionTask = task
@@ -34,19 +50,20 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         task.resume()
     }
     
-    public override func cancel() {
-        
+    public func cancel() {
+
         clearCallbacks()
-        if let nativeConnection = _nativeConnection {
-            sessionTask?.cancel()
-            sessionTask = nil
-            _nativeConnection = nil
-            nativeConnection.invalidateAndCancel()
-        }
+
+        guard let nativeConnection = _nativeConnection else { return }
+
+        sessionTask?.cancel()
+        sessionTask = nil
+        _nativeConnection = nil
+        nativeConnection.invalidateAndCancel()
     }
-    
+
     private var _downloadedBytesCount: Int64 = 0
-    private(set) public override var downloadedBytesCount: Int64 {
+    private(set) public var downloadedBytesCount: Int64 {
         get {
             return _downloadedBytesCount
         }
@@ -56,7 +73,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     }
     
     private var _totalBytesCount: Int64 = 0
-    private(set) public override var totalBytesCount: Int64 {
+    private(set) public var totalBytesCount: Int64 {
         get {
             return _totalBytesCount
         }
@@ -67,28 +84,29 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     
     private var _nativeConnection: NSURLSession?
     private var nativeConnection: NSURLSession {
-        
+
         if let nativeConnection = _nativeConnection {
-                
+
             return nativeConnection
         }
-            
-        let request = NSMutableURLRequest(params: params)
-        
+
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        
+
+        configuration.timeoutIntervalForResource = 120.0 //TODO move to params
+
         let queue = NSOperationQueue.currentQueue()
-        
+
         if queue == nil {
             fatalError("queue should be determined")
         }
         
         let nativeConnection = NSURLSession(
             configuration: configuration,
-            delegate: self,
+            delegate     : self,
             delegateQueue: queue)
         
         _nativeConnection = nativeConnection
+        
         return nativeConnection
     }
     
@@ -101,7 +119,7 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
     }
     
     public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
-        
+
         if let error = error {
             finishLoading(error)
         }
@@ -117,9 +135,9 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         let strContentLength  = httpResponse.allHeaderFields["Content-Length"] as? NSNumber
         _totalBytesCount      = strContentLength?.longLongValue ?? 0
         _downloadedBytesCount = 0
-        
+
         didReceiveResponseBlock?(response: httpResponse)
-        
+
         completionHandler(.Allow)
     }
     
@@ -147,35 +165,45 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
         totalBytesSent: Int64,
         totalBytesExpectedToSend: Int64)
     {
-        if let didUploadDataBlock = self.didUploadDataBlock {
-            
-            let totalBytesExpectedToWrite: Int64 = (totalBytesExpectedToSend == -1)
-                ?params.totalBytesExpectedToWrite
-                :Int64(totalBytesExpectedToSend)
-            
-            if totalBytesExpectedToWrite <= 0 {
-                
-                didUploadDataBlock(progress: 0)
-                return
-            }
-            
-            didUploadDataBlock(progress: Float(totalBytesSent)/Float(totalBytesExpectedToWrite))
+        guard let didUploadDataBlock = self.didUploadDataBlock else { return }
+
+        let totalBytesExpectedToWrite: Int64 = (totalBytesExpectedToSend == -1)
+            ?params.totalBytesExpectedToWrite
+            :Int64(totalBytesExpectedToSend)
+
+        if totalBytesExpectedToWrite <= 0 {
+
+            didUploadDataBlock(progress: 0)
+            return
+        }
+
+        didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
+    }
+    
+    public func URLSession(
+        session: NSURLSession,
+        didReceiveChallenge challenge: NSURLAuthenticationChallenge,
+        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void)
+    {
+        if let callback = shouldAcceptCertificateBlock {
+
+            callback(callback: completionHandler)
+        } else {
+
+            let credentials = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
+            completionHandler(.UseCredential, credentials)
         }
     }
     
     private func processLocalFileWithPath(path: String) {
         
-        var error: NSError?
         //STODO read file in separate thread
         //STODO read big files by chunks
-        let data = NSData(contentsOfFile: path, options: nil, error: &error)!
-        
-        if let error = error {
-            URLSession(nativeConnection, didBecomeInvalidWithError:error)
-        } else {
+        do {
+            let data = try NSData(contentsOfFile: path, options: [])
+            
             let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
             
-            let task: NSURLSessionTask! = nil
             let dataTask: NSURLSessionDataTask! = nil
             
             URLSession(
@@ -184,7 +212,12 @@ public class JNSURLConnection : JAbstractConnection, NSURLSessionDelegate {
                 didReceiveResponse: response,
                 completionHandler: { (_) -> Void in })
             
+            URLSession(nativeConnection, dataTask: dataTask, didReceiveData: data)
+            
             URLSession(nativeConnection, task: dataTask, didCompleteWithError:nil)
+            
+        } catch let error as NSError {
+            self.URLSession(self.nativeConnection, didBecomeInvalidWithError:error)
         }
     }
     

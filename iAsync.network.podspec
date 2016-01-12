@@ -93,7 +93,8 @@ Pod::Spec.new do |s|
   #
 
   # s.resource  = "icon.png"
-  # s.resources = "Resources/*.png"
+  # s.resources = "Resources/*.strings"
+  s.ios.resource_bundle = { 'Bundle' => 'Resources/*'}
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
@@ -121,6 +122,6 @@ Pod::Spec.new do |s|
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.xcconfig = { "SWIFT_OBJC_BRIDGING_HEADER" => "Lib/iAsyncUtils-Bridging-Header.h" }
-  s.dependency "iAsync.async", "~> 0.0.1"
+  s.dependency "iAsync.async"#, "~> 0.0.1"
 
 end

@@ -1,6 +1,6 @@
 //
 //  NSDictionary+XQueryComponents.swift
-//  JNetwork
+//  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 25.09.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
@@ -21,9 +21,9 @@ public struct XQueryComponents {
             let encodedKey = key.stringByEncodingURLQueryComponents()
             
             if values.count > 0 {
-
-                for value in values {
                 
+                for value in values {
+                    
                     let encodedValue = value.stringByEncodingURLQueryComponents()
                     result.append("\(encodedKey)=\(encodedValue)")
                 }
@@ -33,7 +33,7 @@ public struct XQueryComponents {
             }
         }
         
-        return join(queryComponentSeparator, result)
+        return result.joinWithSeparator(queryComponentSeparator)
     }
     
     static public func toData(components: [String:[String]]) -> NSData
