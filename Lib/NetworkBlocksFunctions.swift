@@ -165,20 +165,3 @@ func chunkedURLResponseLoader(
 
     return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
 }
-
-public func dataURLResponseLoader(
-    url     : NSURL,
-    postData: NSData?,
-    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NetworkResponse, NSError>.Async {
-
-    let params = URLConnectionParams(
-        url                      : url,
-        httpBody                 : postData,
-        httpMethod               : nil,
-        headers                  : headers,
-        totalBytesExpectedToWrite: 0,
-        httpBodyStreamBuilder    : nil,
-        certificateCallback      : nil)
-
-    return genericDataURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
-}

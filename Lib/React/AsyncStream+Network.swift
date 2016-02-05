@@ -76,4 +76,18 @@ public struct network {
             }
         })
     }
+
+    public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> AsyncStream<NetworkResponse, Void, NSError> {
+
+        let params = URLConnectionParams(
+            url                      : url,
+            httpBody                 : postData,
+            httpMethod               : nil,
+            headers                  : headers,
+            totalBytesExpectedToWrite: 0,
+            httpBodyStreamBuilder    : nil,
+            certificateCallback      : nil)
+
+        return network.http200DataStream(params)
+    }
 }
