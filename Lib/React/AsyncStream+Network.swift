@@ -12,15 +12,38 @@ import iAsync_reactiveKit
 
 import ReactiveKit
 
-struct network {
+public struct network {
 
-    static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, NSError> {
+    public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, NSError> {
 
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    static func dataStream() -> AsyncStream<NetworkResponse, Void, NSError>! {
+    public static func dataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, Void, NSError>! {
 
-        return nil
+        return create(producer: { observer -> DisposableType? in
+
+            let stream = chunkedDataStream(params)
+
+            let responseData = NSMutableData()
+
+            return stream.observe(observer: { event -> () in
+
+                switch event {
+                case .Success(let value):
+                    let result = NetworkResponse(params: params, response: value, responseData: responseData)
+                    observer(.Success(result))
+                case .Next(let chunk):
+                    switch chunk {
+                    case .Download(let info):
+                        responseData.appendData(info.dataChunk)
+                    case .Upload:
+                        break
+                    }
+                case .Failure(let error):
+                    observer(.Failure(error))
+                }
+            })
+        })
     }
 }
