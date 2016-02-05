@@ -1,22 +1,19 @@
 //
 //  AsyncStreamToAsync.swift
-//  Pods
+//  iAsync_network
 //
 //  Created by Gorbenko Vladimir on 05/02/16.
-//
+//  Copyright (c) 2016 EmbeddedSources. All rights reserved.
 //
 
 import Foundation
 
 import iAsync_async
-import iAsync_utils
 import iAsync_reactiveKit
 
-import ReactiveKit
+extension AsyncStreamType where Next == NetworkProgress, Error == NSError {
 
-extension AsyncStreamType where Value == NetworkResponse, Next == NetworkProgress, Error == NSError {
-
-    public func networkStreamToAsync() -> AsyncTypes<NetworkResponse, NSError>.Async {
+    public func networkStreamToAsync() -> AsyncTypes<Value, NSError>.Async {
 
         return mapNext { info -> AnyObject in
             switch info {
