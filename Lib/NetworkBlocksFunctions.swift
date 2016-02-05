@@ -41,24 +41,24 @@ public struct NetworkResponse : CustomStringConvertible {
 }
 
 internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer? {
-    
+
     return { (response: NSHTTPURLResponse) -> AsyncResult<NSHTTPURLResponse, NSError> in
-        
+
         let statusCode = response.statusCode
-        
+
         if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
             let httpError = HttpError(httpCode:statusCode, context:context)
             return .Failure(httpError)
         }
-        
+
         return .Success(response)
     }
 }
 
 internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErrorTransformer {
-    
+
     return { (error: NSError) -> NSError in
-        
+
         if let error = error as? NetworkError {
             return error
         }
@@ -74,20 +74,20 @@ internal func privateGenericChunkedURLResponseLoader(
     responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
     let factory = { () -> NetworkAsync in
-        
+
         let asyncObj = NetworkAsync(
             params          : params,
             responseAnalyzer: responseAnalyzer,
             errorTransformer: networkErrorAnalyzer(params))
         return asyncObj
     }
-    
+
     let loader = AsyncBuilder.buildWithAdapterFactory(factory)
     return loader
 }
 
 func genericChunkedURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
-    
+
     return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: nil)
 }
 
@@ -99,12 +99,12 @@ public func genericDataURLResponseLoader(
         progressCallback: AsyncProgressCallback?,
         stateCallback   : AsyncChangeStateCallback?,
         finishCallback  : AsyncTypes<NetworkResponse, NSError>.DidFinishAsyncCallback?) -> AsyncHandler in
-        
+
         let loader = privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: responseAnalyzer)
-        
+
         let responseData = NSMutableData()
         let dataProgressCallback = { (progressInfo: AnyObject) -> () in
-            
+
             if let progressInfo = progressInfo as? NetworkResponseDataCallback {
 
                 responseData.appendData(progressInfo.dataChunk)
@@ -160,7 +160,7 @@ func chunkedURLResponseLoader(
         totalBytesExpectedToWrite: 0,
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
-    
+
     return privateGenericChunkedURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
 }
 
@@ -177,7 +177,7 @@ public func dataURLResponseLoader(
         totalBytesExpectedToWrite: 0,
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
-    
+
     return genericDataURLResponseLoader(params: params, responseAnalyzer: downloadStatusCodeResponseAnalyzer(params))
 }
 
@@ -194,6 +194,6 @@ public func perkyDataURLResponseLoader(
         totalBytesExpectedToWrite: 0,
         httpBodyStreamBuilder    : nil,
         certificateCallback      : nil)
-    
+
     return genericDataURLResponseLoader(params: params, responseAnalyzer: nil)
 }
