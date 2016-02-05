@@ -11,6 +11,8 @@ import Foundation
 import iAsync_async
 import iAsync_utils
 
+import ReactiveKit
+
 public struct NetworkResponse : CustomStringConvertible {
 
     public let params      : URLConnectionParams
@@ -40,9 +42,9 @@ public struct NetworkResponse : CustomStringConvertible {
     }
 }
 
-internal func downloadStatusCodeResponseAnalyzer(context: CustomStringConvertible) -> UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer? {
+internal func downloadStatusCodeResponseAnalyzer(context: URLConnectionParams) -> NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError> {
 
-    return { (response: NSHTTPURLResponse) -> AsyncResult<NSHTTPURLResponse, NSError> in
+    return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, NSError> in
 
         let statusCode = response.statusCode
 
@@ -71,7 +73,7 @@ internal func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErro
 
 internal func privateGenericChunkedURLResponseLoader(
     params params: URLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
+    responseAnalyzer: (NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError>)?) -> AsyncTypes<NSHTTPURLResponse, NSError>.Async {
 
     let factory = { () -> NetworkAsync in
 
@@ -93,7 +95,7 @@ func genericChunkedURLResponseLoader(params: URLConnectionParams) -> AsyncTypes<
 
 public func genericDataURLResponseLoader(
     params params: URLConnectionParams,
-    responseAnalyzer: UtilsBlockDefinitions2<NSHTTPURLResponse, NSHTTPURLResponse, NSError>.Analyzer?) -> AsyncTypes<NetworkResponse, NSError>.Async
+    responseAnalyzer: (NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError>)?) -> AsyncTypes<NetworkResponse, NSError>.Async
 {
     return { (
         progressCallback: AsyncProgressCallback?,
@@ -167,8 +169,8 @@ func chunkedURLResponseLoader(
 public func dataURLResponseLoader(
     url     : NSURL,
     postData: NSData?,
-    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NetworkResponse, NSError>.Async
-{
+    headers : URLConnectionParams.HeadersType?) -> AsyncTypes<NetworkResponse, NSError>.Async {
+
     let params = URLConnectionParams(
         url                      : url,
         httpBody                 : postData,

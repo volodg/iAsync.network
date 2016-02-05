@@ -60,4 +60,20 @@ public struct network {
 
         return network.dataStream(params)
     }
+
+    public static func http200DataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, Void, NSError>! {
+
+        let stream = dataStream(params)
+
+        return stream.tryMap({ response -> Result<NetworkResponse, NSError> in
+
+            let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
+            switch result {
+            case .Failure(let error):
+                return .Failure(error)
+            case .Success:
+                return .Success(response)
+            }
+        })
+    }
 }

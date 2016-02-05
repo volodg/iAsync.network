@@ -12,6 +12,8 @@ import iAsync_async
 import iAsync_utils
 import iAsync_reactiveKit
 
+import ReactiveKit
+
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
 public enum NetworkProgress {
@@ -122,14 +124,14 @@ final internal class NetworkAsync : AsyncInterface {
     typealias ValueT = NSHTTPURLResponse
 
     private let params          : URLConnectionParams
-    private let responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.Analyzer?
+    private let responseAnalyzer: (NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError>)?
     private let errorTransformer: JNetworkErrorTransformer?
 
     private var connection : NSURLSessionConnection?
 
     init(
         params          : URLConnectionParams,
-        responseAnalyzer: UtilsBlockDefinitions2<ValueT, ValueT, ErrorT>.Analyzer?,
+        responseAnalyzer: (NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError>)?,
         errorTransformer: JNetworkErrorTransformer?)
     {
         self.params           = params
@@ -200,7 +202,7 @@ final internal class NetworkAsync : AsyncInterface {
 
             if let responseAnalyzer = unretainedSelf.responseAnalyzer {
 
-                let result = responseAnalyzer(object: response)
+                let result = responseAnalyzer(response)
 
                 switch result {
                 case .Success(let value):
@@ -208,12 +210,6 @@ final internal class NetworkAsync : AsyncInterface {
                 case .Failure(let error):
                     unretainedSelf.forceCancel()
                     finish(error)
-                case .Interrupted:
-                    unretainedSelf.forceCancel()
-                    finishWithError(.Interrupted)
-                case .Unsubscribed:
-                    unretainedSelf.forceCancel()
-                    finishWithError(.Unsubscribed)
                 }
                 return
             }
