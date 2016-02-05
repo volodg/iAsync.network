@@ -19,7 +19,7 @@ public struct network {
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    public static func dataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, Void, NSError>! {
+    public static func dataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, Void, NSError> {
 
         return create(producer: { observer -> DisposableType? in
 
@@ -45,5 +45,19 @@ public struct network {
                 }
             })
         })
+    }
+
+    public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> AsyncStream<NetworkResponse, Void, NSError> {
+
+        let params = URLConnectionParams(
+            url                      : url,
+            httpBody                 : postData,
+            httpMethod               : nil,
+            headers                  : headers,
+            totalBytesExpectedToWrite: 0,
+            httpBodyStreamBuilder    : nil,
+            certificateCallback      : nil)
+
+        return network.dataStream(params)
     }
 }

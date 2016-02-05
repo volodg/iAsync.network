@@ -20,12 +20,11 @@ public enum NetworkProgress {
     case Upload(NetworkUploadProgressCallback)
 }
 
-//TODO not public
-final public class NetworkAsyncStream : AsyncStreamInterface {
+final class NetworkAsyncStream : AsyncStreamInterface {
 
-    public typealias Value = NSHTTPURLResponse
-    public typealias Next  = NetworkProgress
-    public typealias Error = NSError
+    typealias Value = NSHTTPURLResponse
+    typealias Next  = NetworkProgress
+    typealias Error = NSError
 
     private let params          : URLConnectionParams
     private let errorTransformer: JNetworkErrorTransformer?
@@ -38,7 +37,7 @@ final public class NetworkAsyncStream : AsyncStreamInterface {
         self.errorTransformer = errorTransformer
     }
 
-    public func asyncWithCallbacks(success onSuccess: Value -> Void, next: Next  -> Void, error onError: Error -> Void) {
+    func asyncWithCallbacks(success onSuccess: Value -> Void, next: Next  -> Void, error onError: Error -> Void) {
 
         let connection  = NSURLSessionConnection(params: self.params)
         self.connection = connection
@@ -100,7 +99,7 @@ final public class NetworkAsyncStream : AsyncStreamInterface {
         connection.start()
     }
 
-    public func cancel() {
+    func cancel() {
 
         guard let connection = connection else { return }
 
