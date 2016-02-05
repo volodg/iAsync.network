@@ -14,14 +14,9 @@ import ReactiveKit
 
 struct network {
 
-    static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NSData, NSError>! {
+    static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, NSError> {
 
-//        let factory = { () -> NetworkAsyncStream in
-//            return NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params))
-//        }
-
-        //return streamBuilder<NetworkAsyncStream>.createStream(factory)
-        return nil
+        return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
     static func dataStream() -> AsyncStream<NetworkResponse, Void, NSError>! {
