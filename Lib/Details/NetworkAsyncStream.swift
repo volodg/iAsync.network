@@ -21,8 +21,6 @@ public enum NetworkProgress {
     case Upload(NetworkUploadProgressCallback)
 }
 
-private var referrenceCount = 0
-
 final class NetworkAsyncStream : AsyncStreamInterface {
 
     typealias Value = NSHTTPURLResponse
@@ -34,15 +32,8 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
     private var connection: NSURLSessionConnection?
 
-    deinit {
-        referrenceCount -= 1
-        print("referrenceCount: \(referrenceCount)")
-    }
-
     init(params: URLConnectionParams, errorTransformer: JNetworkErrorTransformer?) {
 
-        referrenceCount += 1
-        print("referrenceCount: \(referrenceCount)")
         self.params           = params
         self.errorTransformer = errorTransformer
     }
