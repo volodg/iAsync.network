@@ -22,6 +22,6 @@ extension AsyncStreamType where Next == NetworkProgress, Error == NSError {
             case .Upload(let chunk):
                 return chunk
             }
-        }.streamToAsync()
+        }.toAsync()
     }
 }
