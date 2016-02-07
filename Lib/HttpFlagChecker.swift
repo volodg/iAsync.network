@@ -8,8 +8,6 @@
 
 import Foundation
 
-import iAsync_utils
-
 private let indexes = Set([301, 302, 303, 307])
 
 final public class HttpFlagChecker {

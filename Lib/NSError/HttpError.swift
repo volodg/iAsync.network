@@ -8,8 +8,6 @@
 
 import Foundation
 
-import iAsync_utils
-
 final public class HttpError : NetworkError {
 
     private let context: CustomStringConvertible
