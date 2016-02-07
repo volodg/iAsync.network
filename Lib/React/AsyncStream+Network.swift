@@ -12,6 +12,8 @@ import iAsync_reactiveKit
 
 import ReactiveKit
 
+public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, NSError>
+
 public struct network {
 
     public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, NSError> {
@@ -19,7 +21,7 @@ public struct network {
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    public static func dataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, NetworkProgress, NSError> {
+    public static func dataStream(params: URLConnectionParams) -> NetworkStream {
 
         return create(producer: { observer -> DisposableType? in
 
@@ -48,7 +50,7 @@ public struct network {
         })
     }
 
-    public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> AsyncStream<NetworkResponse, NetworkProgress, NSError> {
+    public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -62,7 +64,7 @@ public struct network {
         return network.dataStream(params)
     }
 
-    public static func http200DataStream(params: URLConnectionParams) -> AsyncStream<NetworkResponse, NetworkProgress, NSError>! {
+    public static func http200DataStream(params: URLConnectionParams) -> NetworkStream {
 
         let stream = dataStream(params)
 
@@ -78,7 +80,7 @@ public struct network {
         })
     }
 
-    public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> AsyncStream<NetworkResponse, NetworkProgress, NSError> {
+    public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
