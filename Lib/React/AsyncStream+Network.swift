@@ -121,3 +121,18 @@ public struct network {
         }
     }
 }
+
+public extension AsyncStreamType where Next == NetworkProgress {
+
+    @warn_unused_result
+    public func netMapNext() -> AsyncStream<Value, AnyObject, Error> {
+        return mapNext { info -> AnyObject in
+            switch info {
+            case .Download(let chunk):
+                return chunk
+            case .Upload(let chunk):
+                return chunk
+            }
+        }
+    }
+}

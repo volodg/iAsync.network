@@ -15,13 +15,6 @@ extension AsyncStreamType where Next == NetworkProgress, Error == NSError {
 
     public func networkStreamToAsync() -> AsyncTypes<Value, NSError>.Async {
 
-        return mapNext { info -> AnyObject in
-            switch info {
-            case .Download(let chunk):
-                return chunk
-            case .Upload(let chunk):
-                return chunk
-            }
-        }.toAsync()
+        return netMapNext().toAsync()
     }
 }
