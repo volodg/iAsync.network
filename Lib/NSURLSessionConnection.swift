@@ -8,8 +8,7 @@
 
 import Foundation
 
-//TODO remove NSObject inheritance
-final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
+internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
     func clearCallbacks() {
 
@@ -20,22 +19,22 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         shouldAcceptCertificateBlock = nil
     }
 
-    public var didReceiveResponseBlock     : DidReceiveResponseHandler?
-    public var didReceiveDataBlock         : DidReceiveDataHandler?
-    public var didFinishLoadingBlock       : DidFinishLoadingHandler?
-    public var didUploadDataBlock          : DidUploadDataHandler?
-    public var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
+    internal var didReceiveResponseBlock     : DidReceiveResponseHandler?
+    internal var didReceiveDataBlock         : DidReceiveDataHandler?
+    internal var didFinishLoadingBlock       : DidFinishLoadingHandler?
+    internal var didUploadDataBlock          : DidUploadDataHandler?
+    internal var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
 
     private let params: URLConnectionParams
 
-    public init(params: URLConnectionParams) {
+    internal init(params: URLConnectionParams) {
 
         self.params = params
     }
 
     private var sessionTask: NSURLSessionTask?
 
-    public func start() {
+    internal func start() {
 
         if params.url.fileURL {
             let path = params.url.path
@@ -50,7 +49,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         task.resume()
     }
 
-    public func cancel() {
+    internal func cancel() {
 
         clearCallbacks()
 
@@ -63,7 +62,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     }
 
     private var _downloadedBytesCount: Int64 = 0
-    private(set) public var downloadedBytesCount: Int64 {
+    private(set) internal var downloadedBytesCount: Int64 {
         get {
             return _downloadedBytesCount
         }
@@ -73,7 +72,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     }
 
     private var _totalBytesCount: Int64 = 0
-    private(set) public var totalBytesCount: Int64 {
+    private(set) internal var totalBytesCount: Int64 {
         get {
             return _totalBytesCount
         }
@@ -92,7 +91,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
 
-        configuration.timeoutIntervalForResource = 120.0 //TODO move to params
+        configuration.timeoutIntervalForResource = 120.0
 
         let queue = NSOperationQueue.currentQueue()
 
@@ -118,14 +117,14 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         finish?(error: error)
     }
 
-    public func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
+    internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
 
         if let error = error {
             finishLoading(error)
         }
     }
 
-    public func URLSession(
+    internal func URLSession(
         session : NSURLSession!,
         dataTask: NSURLSessionDataTask!,
         didReceiveResponse response: NSURLResponse,
@@ -141,7 +140,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         completionHandler(.Allow)
     }
 
-    public func URLSession(
+    internal func URLSession(
         session : NSURLSession,
         dataTask: NSURLSessionDataTask,
         didReceiveData data: NSData) {
@@ -150,7 +149,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         self.didReceiveDataBlock?(data: data)
     }
 
-    public func URLSession(
+    internal func URLSession(
         session: NSURLSession,
         task   : NSURLSessionTask!,
         didCompleteWithError error: NSError?) {
@@ -158,7 +157,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         finishLoading(error)
     }
 
-    public func URLSession(
+    internal func URLSession(
         session: NSURLSession,
         task: NSURLSessionTask,
         didSendBodyData bytesSent: Int64,
@@ -180,7 +179,7 @@ final public class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
     }
 
-    public func URLSession(
+    internal func URLSession(
         session: NSURLSession,
         didReceiveChallenge challenge: NSURLAuthenticationChallenge,
         completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
