@@ -203,7 +203,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
             let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
 
-            let dataTask: NSURLSessionDataTask! = nil
+            let dataTask = NSURLSessionDataTask()
 
             URLSession(
                 nativeConnection,
