@@ -56,7 +56,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
             next(.Download(progressData))
         }
 
-        connection.didUploadDataBlock = { (progress: Double) -> () in
+        connection.didUploadDataBlock = { progress -> () in
 
             let uploadProgress = NetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
             next(.Upload(uploadProgress))
