@@ -96,7 +96,7 @@ final public class FormDataBuilder : NSObject {
             let bufferLength = 10*1024
             var array = Array<UInt8>(count: Int(bufferLength), repeatedValue: 0)
 
-            array.withUnsafeMutableBufferPointer({ (inout cArray: UnsafeMutableBufferPointer<UInt8>) -> () in
+            array.withUnsafeMutableBufferPointer { (inout cArray: UnsafeMutableBufferPointer<UInt8>) -> () in
 
                 let readFileChunk = { () -> Int in
                     return fread(cArray.baseAddress, 1, bufferLength, uploadDataFile)
@@ -107,7 +107,7 @@ final public class FormDataBuilder : NSObject {
                     fwrite(cArray.baseAddress, 1, readBytes, file)
                     readBytes = readFileChunk()
                 }
-            })
+            }
 
             fclose(uploadDataFile)
         }

@@ -29,7 +29,7 @@ public struct network {
 
             let responseData = NSMutableData()
 
-            return stream.observe(observer: { event -> () in
+            return stream.observe { event -> () in
 
                 switch event {
                 case .Success(let value):
@@ -46,7 +46,7 @@ public struct network {
                 case .Failure(let error):
                     observer(.Failure(error))
                 }
-            })
+            }
         })
     }
 
@@ -68,7 +68,7 @@ public struct network {
 
         let stream = dataStream(params)
 
-        return stream.tryMap({ response -> Result<NetworkResponse, NSError> in
+        return stream.tryMap { response -> Result<NetworkResponse, NSError> in
 
             let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
             switch result {
@@ -77,7 +77,7 @@ public struct network {
             case .Success:
                 return .Success(response)
             }
-        })
+        }
     }
 
     public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {

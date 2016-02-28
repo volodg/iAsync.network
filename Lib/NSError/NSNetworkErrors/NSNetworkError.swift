@@ -46,7 +46,7 @@ public class NSNetworkError : NetworkError {
 
         selfType = { () -> NSNetworkError.Type! in
 
-            return errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }).flatMap { errorClasses[$0] }
+            return errorClasses.indexOf { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
         }()
 
         if selfType == nil {
