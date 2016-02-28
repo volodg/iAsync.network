@@ -209,7 +209,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
                 nativeConnection,
                 dataTask: dataTask,
                 didReceiveResponse: response,
-                completionHandler: { (_) -> Void in })
+                completionHandler: { _ in })
 
             URLSession(nativeConnection, dataTask: dataTask, didReceiveData: data)
 
