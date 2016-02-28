@@ -84,7 +84,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
             onSuccess(resultHolder!)
         }
 
-        let finish = { (error: NSError?) -> Void in
+        let finish = { (error: NSError?) in
 
             finishWithError(error)
         }
