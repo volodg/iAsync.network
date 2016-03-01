@@ -8,33 +8,31 @@
 
 import Foundation
 
-import iAsync_utils
-
 public class NSNetworkError : NetworkError {
-    
+
     let context: URLConnectionParams
     let nativeError: NSError
-    
+
     public required init(context: URLConnectionParams, nativeError: NSError) {
-        
+
         self.context     = context
         self.nativeError = nativeError
-        
+
         super.init(description:"")
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     public override var localizedDescription: String {
-        
+
         return NSLocalizedString(
             "J_NETWORK_GENERIC_ERROR",
             bundle: NSBundle(forClass: self.dynamicType),
             comment:"")
     }
-    
+
     public static func createJNSNetworkErrorWithContext(
         context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
 
@@ -48,7 +46,7 @@ public class NSNetworkError : NetworkError {
 
         selfType = { () -> NSNetworkError.Type! in
 
-            return errorClasses.indexOf({ return $0.isMineNSNetworkError(nativeError) }).flatMap { errorClasses[$0] }
+            return errorClasses.indexOf { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
         }()
 
         if selfType == nil {
@@ -63,12 +61,12 @@ public class NSNetworkError : NetworkError {
     }
 
     public override func copyWithZone(zone: NSZone) -> AnyObject {
-        
+
         return self.dynamicType.init(context: context, nativeError: nativeError)
     }
 
     public override var errorLogDescription: String {
-        
+
         return "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
     }
 }

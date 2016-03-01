@@ -8,8 +8,6 @@
 
 import Foundation
 
-import iAsync_utils
-
 public typealias InputStreamBuilder = () -> NSInputStream
 
 public enum HttpMethod : String {
@@ -26,9 +24,9 @@ public enum HttpMethod : String {
 }
 
 public struct URLConnectionParams : CustomStringConvertible {
-    
+
     public typealias HeadersType = [String:String]
-    
+
     public let url       : NSURL
     public let httpBody  : NSData?
     public let httpMethod: HttpMethod
@@ -45,8 +43,8 @@ public struct URLConnectionParams : CustomStringConvertible {
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
         httpBodyStreamBuilder    : InputStreamBuilder? = nil,
-        certificateCallback      : ShouldAcceptCertificateForHost? = nil)
-    {
+        certificateCallback      : ShouldAcceptCertificateForHost? = nil) {
+
         self.url        = url
         self.httpBody   = httpBody
         self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .POST : .GET)
