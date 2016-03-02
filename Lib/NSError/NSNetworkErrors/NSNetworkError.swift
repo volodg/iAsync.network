@@ -39,9 +39,8 @@ public class NSNetworkError : NetworkError {
         var selfType: NSNetworkError.Type!
 
         //select class for error
-        let errorClasses: [NSNetworkError.Type] =
-        [
-            NSNoInternetNetworkError.self
+        let errorClasses: [NSNetworkError.Type] = [
+            NSNoNetworkError.self
         ]
 
         selfType = { () -> NSNetworkError.Type! in

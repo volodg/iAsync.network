@@ -111,7 +111,7 @@ public struct network {
 
     private static func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErrorTransformer {
 
-        return { (error: NSError) -> NSError in
+        return { error -> NSError in
 
             if let error = error as? NetworkError { return error }
 
