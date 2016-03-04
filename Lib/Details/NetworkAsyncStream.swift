@@ -8,7 +8,7 @@
 
 import Foundation
 
-import iAsync_reactiveKit
+import protocol iAsync_reactiveKit.AsyncStreamInterface
 
 import ReactiveKit
 
@@ -46,7 +46,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
         unowned(unsafe) let unretainedSelf = self
 
-        connection.didReceiveDataBlock = { (dataChunk: NSData) -> () in
+        connection.didReceiveDataBlock = { dataChunk -> () in
 
             let progressData = NetworkResponseDataCallback(
                 dataChunk           : dataChunk,
@@ -91,7 +91,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
         connection.didFinishLoadingBlock = finish
 
-        connection.didReceiveResponseBlock = { (response: NSHTTPURLResponse) -> () in
+        connection.didReceiveResponseBlock = { response -> () in
 
             resultHolder = response
         }
