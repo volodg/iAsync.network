@@ -49,11 +49,7 @@ public extension String {
             let key   = keyValuePairArray[0].stringByDecodingURLQueryComponents()
             let value = keyValuePairArray[1].stringByDecodingURLQueryComponents()
 
-            var results: [String]! = result[key] // URL spec says that multiple values are allowed per key
-
-            if results == nil {
-                results = [String]()
-            }
+            var results = result[key] ?? [String]() // URL spec says that multiple values are allowed per key
 
             results.append(value)
             result[key] = results
