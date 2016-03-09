@@ -61,15 +61,16 @@ final public class FormDataBuilder : NSObject {
         var filePath = NSUUID().UUIDString
 
         filePath = String.cachesPathByAppendingPathComponent(filePath)
-        let filePathPtr = filePath.cStringUsingEncoding(NSUTF8StringEncoding)
 
-        let file = fopen(filePathPtr!, "w+")
+        NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
+
+        let file = NSFileHandle(forWritingAtPath: filePath)!
 
         autoreleasepool {
 
             let boundaryStr  = "--\(boundary)\r\n"
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-            fwrite(boundaryData.bytes, 1, boundaryData.length, file)
+            file.writeData(boundaryData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
@@ -77,7 +78,7 @@ final public class FormDataBuilder : NSObject {
 
             let contentDisposition = "Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(fileName)\"\r\n"
             let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
-            fwrite(contentDispositionData.bytes, 1, contentDispositionData.length, file)
+            file.writeData(contentDispositionData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", parameter, fileName] dataUsingEncoding:NSUTF8StringEncoding]]
 
@@ -85,31 +86,25 @@ final public class FormDataBuilder : NSObject {
             let contentTypeStr  = contentType ?? "application/octet-stream"
             let contentTypeSrv  = "Content-Type: \(contentTypeStr)\r\n\r\n"
             let contentTypeData = contentTypeSrv.dataUsingEncoding(NSUTF8StringEncoding)!
-            fwrite(contentTypeData.bytes, 1, contentTypeData.length, file)
+            file.writeData(contentTypeData)
         }
         //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]
 
         autoreleasepool {
 
-            let uploadDataFile = fopen(dataFilePath.cStringUsingEncoding(NSUTF8StringEncoding)!, "r")
+            let uploadDataFile = NSFileHandle(forReadingAtPath: dataFilePath)!
 
-            let bufferLength = 10*1024
-            var array = Array<UInt8>(count: Int(bufferLength), repeatedValue: 0)
+            let chunkSize = 10*1024
 
-            array.withUnsafeMutableBufferPointer { (inout cArray: UnsafeMutableBufferPointer<UInt8>) -> () in
+            var readBytes = uploadDataFile.readDataOfLength(chunkSize)
 
-                let readFileChunk = { () -> Int in
-                    return fread(cArray.baseAddress, 1, bufferLength, uploadDataFile)
-                }
-                var readBytes = readFileChunk()
-                while readBytes != 0 {
+            while readBytes.length != 0 {
 
-                    fwrite(cArray.baseAddress, 1, readBytes, file)
-                    readBytes = readFileChunk()
-                }
+                file.writeData(readBytes)
+                readBytes = uploadDataFile.readDataOfLength(chunkSize)
             }
 
-            fclose(uploadDataFile)
+            uploadDataFile.closeFile()
         }
         //[result appendData:data]
 
@@ -117,7 +112,7 @@ final public class FormDataBuilder : NSObject {
 
             let boundaryStr  = "\r\n--\(boundary)\r\n"
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-            fwrite(boundaryData.bytes, 1, boundaryData.length, file)
+            file.writeData(boundaryData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
@@ -126,11 +121,11 @@ final public class FormDataBuilder : NSObject {
             autoreleasepool {
 
                 let formData = self.formDataForParams(boundary, dictWithParam: dictWithParam, ending: "\r\n")
-                fwrite(formData.bytes, 1, formData.length, file)
+                file.writeData(formData)
             }
         }
 
-        fclose(file)
+        file.closeFile()
 
         return filePath
     }
