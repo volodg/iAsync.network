@@ -26,6 +26,11 @@ public extension NSError {
             || type == .CFURLErrorSecureConnectionFailed
     }
 
+    var socketIsNoLongerUsable: Bool {
+
+        return domain == NSPOSIXErrorDomain && Int32(code) == EBADF
+    }
+
     var isActiveCallError: Bool {
 
         if domain != NSURLErrorDomain {

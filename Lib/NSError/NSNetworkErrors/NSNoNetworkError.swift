@@ -11,7 +11,7 @@ import Foundation
 final public class NSNoNetworkError : NSNetworkError {
 
     override class func isMineNSNetworkError(error: NSError) -> Bool {
-        return error.isNetworkError
+        return error.isNetworkError || error.socketIsNoLongerUsable
     }
 
     override public var localizedDescription: String {
