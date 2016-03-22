@@ -38,6 +38,6 @@ public extension NSError {
         }
 
         let type = CFNetworkErrors(rawValue: CInt(code))
-        return type == CFNetworkErrors.CFURLErrorCallIsActive
+        return type == .CFURLErrorCallIsActive
     }
 }
