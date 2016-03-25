@@ -10,7 +10,7 @@ import Foundation
 
 final public class FormDataBuilder {
 
-    public static func formDataForParams(boundary: String?, params: [String:String], ending: String = "--") -> NSData {
+    public static func formDataForParams(boundary: String, params: [String:String], ending: String = "--") -> NSData {
 
         let result = NSMutableData()
 
@@ -18,12 +18,10 @@ final public class FormDataBuilder {
 
             autoreleasepool {
 
-                if let boundary = boundary {
-                    autoreleasepool {
-                        let boundaryStr  = "--\(boundary)\r\n"
-                        let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-                        result.appendData(boundaryData)
-                    }
+                autoreleasepool {
+                    let boundaryStr  = "--\(boundary)\r\n"
+                    let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
+                    result.appendData(boundaryData)
                 }
                 //[self appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
@@ -42,12 +40,10 @@ final public class FormDataBuilder {
             }
         }
 
-        if let boundary = boundary {
-            autoreleasepool {
-                let boundaryStr  = "--\(boundary)\(ending)"
-                let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-                result.appendData(boundaryData)
-            }
+        autoreleasepool {
+            let boundaryStr  = "--\(boundary)\(ending)"
+            let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
+            result.appendData(boundaryData)
         }
         //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
