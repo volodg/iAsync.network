@@ -10,11 +10,11 @@ import Foundation
 
 final public class FormDataBuilder {
 
-    public static func formDataForParams(boundary: String?, dictWithParam: [String:String], ending: String = "--") -> NSData {
+    public static func formDataForParams(boundary: String?, params: [String:String], ending: String = "--") -> NSData {
 
         let result = NSMutableData()
 
-        for (key, value) in dictWithParam {
+        for (key, value) in params {
 
             autoreleasepool {
 
@@ -55,12 +55,12 @@ final public class FormDataBuilder {
     }
 
     public static func tmpFileForUploadStreamWithDataForFilePath(
-        dataFilePath : String,
-        boundary     : String,
-        name         : String,
-        fileName     : String,
-        contentType  : String?,
-        dictWithParam: [String:String]?) -> String {
+        dataFilePath: String,
+        boundary    : String,
+        name        : String,
+        fileName    : String,
+        contentType : String?,
+        params      : [String:String]?) -> String {
 
         var filePath = NSUUID().UUIDString
 
@@ -120,11 +120,11 @@ final public class FormDataBuilder {
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
-        if let dictWithParam = dictWithParam {
+        if let params = params {
 
             autoreleasepool {
 
-                let formData = self.formDataForParams(boundary, dictWithParam: dictWithParam, ending: "\r\n")
+                let formData = self.formDataForParams(boundary, params: params, ending: "\r\n")
                 file.writeData(formData)
             }
         }
