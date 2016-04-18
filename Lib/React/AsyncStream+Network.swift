@@ -8,6 +8,7 @@
 
 import Foundation
 
+import iAsync_utils
 import protocol iAsync_reactiveKit.AsyncStreamType
 import struct iAsync_reactiveKit.AsyncStream
 import func iAsync_reactiveKit.create
@@ -15,11 +16,11 @@ import func iAsync_reactiveKit.createStream
 
 import ReactiveKit
 
-public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, NSError>
+public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, ErrorWithContext>
 
 public struct network {
 
-    public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, NSError> {
+    public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, ErrorWithContext> {
 
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
@@ -71,7 +72,7 @@ public struct network {
 
         let stream = dataStream(params)
 
-        return stream.tryMap { response -> Result<NetworkResponse, NSError> in
+        return stream.tryMap { response -> Result<NetworkResponse, ErrorWithContext> in
 
             let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
             switch result {
@@ -97,15 +98,16 @@ public struct network {
         return network.http200DataStream(params)
     }
 
-    private static func downloadStatusCodeResponseAnalyzer(context: URLConnectionParams) -> NSHTTPURLResponse -> Result<NSHTTPURLResponse, NSError> {
+    private static func downloadStatusCodeResponseAnalyzer(context: URLConnectionParams) -> NSHTTPURLResponse -> Result<NSHTTPURLResponse, ErrorWithContext> {
 
-        return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, NSError> in
+        return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, ErrorWithContext> in
 
             let statusCode = response.statusCode
 
             if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
-                let httpError = HttpError(httpCode:statusCode, context:context)
-                return .Failure(httpError)
+                let httpError = HttpError(httpCode: statusCode, context: context)
+                let contextError = ErrorWithContext(error: httpError, context: #function)
+                return .Failure(contextError)
             }
 
             return .Success(response)

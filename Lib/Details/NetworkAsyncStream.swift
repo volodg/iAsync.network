@@ -9,6 +9,7 @@
 import Foundation
 
 import protocol iAsync_reactiveKit.AsyncStreamInterface
+import iAsync_utils
 
 import ReactiveKit
 
@@ -24,7 +25,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
     typealias Value = NSHTTPURLResponse
     typealias Next  = NetworkProgress
-    typealias Error = NSError
+    typealias Error = ErrorWithContext
 
     private let params          : URLConnectionParams
     private let errorTransformer: JNetworkErrorTransformer?
@@ -66,25 +67,26 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
         let errorTransformer = self.errorTransformer
 
-        let finishWithError = { (error: Error?) -> () in
+        let finishWithError = { (error: ErrorWithContext?) -> () in
 
             if let error = error {
 
-                let passError: Error
+                let passError: NSError
                 if let errorTransformer = errorTransformer {
-                    passError = errorTransformer(error: error)
+                    passError = errorTransformer(error: error.error)
                 } else {
-                    passError = error
+                    passError = error.error
                 }
 
-                onError(passError)
+                let errorWithContext = ErrorWithContext(error: passError, context: error.context)
+                onError(errorWithContext)
                 return
             }
 
             onSuccess(resultHolder!)
         }
 
-        let finish = { (error: NSError?) in
+        let finish = { (error: ErrorWithContext?) in
 
             finishWithError(error)
         }

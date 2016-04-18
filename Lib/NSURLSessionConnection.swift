@@ -5,6 +5,7 @@
 //  Created by Vladimir Gorbenko on 25.09.14.
 //  Copyright (c) 2014 EmbeddedSources. All rights reserved.
 //
+import iAsync_utils
 
 import Foundation
 
@@ -109,7 +110,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         return nativeConnection
     }
 
-    func finishLoading(error: NSError?) {
+    func finishLoading(error: ErrorWithContext?) {
 
         let finish = self.didFinishLoadingBlock
 
@@ -120,7 +121,8 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
 
         if let error = error {
-            finishLoading(error)
+            let contextError = ErrorWithContext(error: error, context: #function)
+            finishLoading(contextError)
         }
     }
 
@@ -154,7 +156,8 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         task   : NSURLSessionTask!,
         didCompleteWithError error: NSError?) {
 
-        finishLoading(error)
+        let contextError = error.flatMap { ErrorWithContext(error: $0, context: #function) }
+        finishLoading(contextError)
     }
 
     internal func URLSession(
