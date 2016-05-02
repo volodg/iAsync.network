@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 final public class FormDataBuilder {
 
     public static func formDataForParams(boundary: String, params: [String:String], ending: String = "--") -> NSData {
@@ -56,7 +58,7 @@ final public class FormDataBuilder {
         name        : String,
         fileName    : String,
         contentType : String?,
-        params      : [String:String]?) -> String {
+        params      : [String:String]?) throws -> String {
 
         var filePath = NSUUID().UUIDString
 
@@ -64,7 +66,10 @@ final public class FormDataBuilder {
 
         NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
 
-        let file = NSFileHandle(forWritingAtPath: filePath)!
+        guard let file = NSFileHandle(forWritingAtPath: filePath) else {
+
+            throw UtilsError(description: "can not create NSFileHandle with path: \(filePath)")
+        }
 
         autoreleasepool {
 
