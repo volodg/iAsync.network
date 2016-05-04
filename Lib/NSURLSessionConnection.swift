@@ -38,8 +38,11 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     internal func start() {
 
         if params.url.fileURL {
-            let path = params.url.path
-            processLocalFileWithPath(path!)
+            if let path = params.url.path {
+                processLocalFileWithPath(path)
+            } else {
+                assert(false)
+            }
             return
         }
 
@@ -132,12 +135,17 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         didReceiveResponse response: NSURLResponse,
         completionHandler: (NSURLSessionResponseDisposition) -> Void) {
 
-        let httpResponse      = response as! NSHTTPURLResponse
-        let strContentLength  = httpResponse.allHeaderFields["Content-Length"] as? NSNumber
-        _totalBytesCount      = strContentLength?.longLongValue ?? 0
-        _downloadedBytesCount = 0
+        if let httpResponse = response as? NSHTTPURLResponse {
 
-        didReceiveResponseBlock?(response: httpResponse)
+            let strContentLength  = httpResponse.allHeaderFields["Content-Length"] as? NSNumber
+            _totalBytesCount      = strContentLength?.longLongValue ?? 0
+            _downloadedBytesCount = 0
+
+            didReceiveResponseBlock?(response: httpResponse)
+        } else {
+
+            iAsync_utils_logger.logError("unexpected response: \(response)", context: #function)
+        }
 
         completionHandler(.Allow)
     }
@@ -192,8 +200,13 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
             callback(callback: completionHandler)
         } else {
 
-            let credentials = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
-            completionHandler(.UseCredential, credentials)
+            if let trust = challenge.protectionSpace.serverTrust {
+                let credentials = NSURLCredential(forTrust: trust)
+                completionHandler(.UseCredential, credentials)
+            } else {
+
+                //TODO
+            }
         }
     }
 
@@ -204,15 +217,19 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         do {
             let data = try NSData(contentsOfFile: path, options: [])
 
-            let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil)!
-
             let dataTask = NSURLSessionDataTask()
 
-            URLSession(
-                nativeConnection,
-                dataTask: dataTask,
-                didReceiveResponse: response,
-                completionHandler: { _ in })
+            if let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil) {
+
+                URLSession(
+                    nativeConnection,
+                    dataTask: dataTask,
+                    didReceiveResponse: response,
+                    completionHandler: { _ in })
+            } else {
+
+                iAsync_utils_logger.logError("can not create NSHTTPURLResponse", context: #function)
+            }
 
             URLSession(nativeConnection, dataTask: dataTask, didReceiveData: data)
 

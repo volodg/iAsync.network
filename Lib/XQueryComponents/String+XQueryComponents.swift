@@ -8,11 +8,13 @@
 
 import Foundation
 
+import iAsync_utils
+
 public extension String {
 
-    func stringByDecodingURLQueryComponents() -> String {
+    func stringByDecodingURLQueryComponents() -> String? {
 
-        return stringByRemovingPercentEncoding!
+        return stringByRemovingPercentEncoding
     }
 
     func stringByEncodingURLQueryComponents() -> String {
@@ -46,12 +48,24 @@ public extension String {
                 continue
             }
 
-            let key   = keyValuePairArray[0].stringByDecodingURLQueryComponents()
-            let value = keyValuePairArray[1].stringByDecodingURLQueryComponents()
+            let decodedKey = keyValuePairArray[0]
+            guard let key = decodedKey.stringByDecodingURLQueryComponents() else {
+
+                iAsync_utils_logger.logError("can not decode key: \(decodedKey)", context: #function)
+                continue
+            }
+
+            let decodedVal = keyValuePairArray[1]
+            guard let value = decodedVal.stringByDecodingURLQueryComponents() else {
+
+                iAsync_utils_logger.logError("can not decode val: \(decodedVal)", context: #function)
+                continue
+            }
 
             var results = result[key] ?? [String]() // URL spec says that multiple values are allowed per key
 
             results.append(value)
+
             result[key] = results
         }
 
