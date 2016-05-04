@@ -8,8 +8,6 @@
 
 import Foundation
 
-import iAsync_utils
-
 public extension String {
 
     func stringByDecodingURLQueryComponents() -> String? {

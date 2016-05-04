@@ -8,8 +8,6 @@
 
 import Foundation
 
-import iAsync_utils
-
 public class NetworkError : UtilsError {
 
     public override class func iAsyncErrorsDomain() -> String {
