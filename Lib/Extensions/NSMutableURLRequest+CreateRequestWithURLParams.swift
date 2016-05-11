@@ -14,7 +14,14 @@ extension NSMutableURLRequest {
 
         let inputStream: NSInputStream?
         if let factory = params.httpBodyStreamBuilder {
-            inputStream = factory()
+
+            let streamResult = factory()
+
+            if let error = streamResult.error {
+                iAsync_utils_logger.logError("create stream error: \(error)", context: #function)
+            }
+
+            inputStream = streamResult.value
         } else {
             inputStream = nil
         }
