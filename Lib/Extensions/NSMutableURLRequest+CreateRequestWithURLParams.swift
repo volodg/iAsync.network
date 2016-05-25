@@ -8,13 +8,22 @@
 
 import Foundation
 
+import let iAsync_utils.iAsync_utils_logger
+
 extension NSMutableURLRequest {
 
     convenience init(params: URLConnectionParams) {
 
         let inputStream: NSInputStream?
         if let factory = params.httpBodyStreamBuilder {
-            inputStream = factory()
+
+            let streamResult = factory()
+
+            if let error = streamResult.error {
+                iAsync_utils_logger.logError("create stream error: \(error)", context: #function)
+            }
+
+            inputStream = streamResult.value
         } else {
             inputStream = nil
         }

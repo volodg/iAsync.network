@@ -205,7 +205,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
                 completionHandler(.UseCredential, credentials)
             } else {
 
-                //TODO
+                assert(false)
             }
         }
     }
