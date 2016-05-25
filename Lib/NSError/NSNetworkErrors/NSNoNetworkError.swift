@@ -23,6 +23,6 @@ final public class NSNoNetworkError : NSNetworkError {
     }
 
     override public func writeErrorWithLogger(context: AnyObject) {
-        writeErrorToNSLog()
+        writeErrorToNSLog(context)
     }
 }

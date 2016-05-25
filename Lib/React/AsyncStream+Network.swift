@@ -27,7 +27,7 @@ public struct network {
 
     public static func dataStream(params: URLConnectionParams) -> NetworkStream {
 
-        return create(producer: { observer -> DisposableType? in
+        return create(producer: { observer -> Disposable? in
 
             let stream = chunkedDataStream(params)
 
