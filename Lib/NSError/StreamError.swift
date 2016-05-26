@@ -21,7 +21,7 @@ final public class StreamError : NetworkError {
         let domain = "com.just_for_fun.library.network.CFError(\(streamError.domain))"
         let description = "JNETWORK_CF_STREAM_ERROR"
 
-        super.init(description: description, domain: domain, code: Int(streamError.error))//TODO streamError.error)
+        super.init(description: description, domain: domain, code: Int(streamError.error))
     }
 
     required public init?(coder aDecoder: NSCoder) {
