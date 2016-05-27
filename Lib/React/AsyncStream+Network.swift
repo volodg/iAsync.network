@@ -3,7 +3,7 @@
 //  iAsync_network
 //
 //  Created by Gorbenko Vladimir on 05/02/16.
-//  Copyright (c) 2016 EmbeddedSources. All rights reserved.
+//  Copyright © 2016 EmbeddedSources. All rights reserved.
 //
 
 import Foundation
