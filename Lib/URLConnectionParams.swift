@@ -8,7 +8,7 @@
 
 import Foundation
 
-import Result
+import ReactiveKit
 
 public typealias InputStreamBuilder = () -> Result<NSInputStream, NSError>
 
