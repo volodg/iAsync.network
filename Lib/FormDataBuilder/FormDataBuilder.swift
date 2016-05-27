@@ -115,7 +115,7 @@ final public class FormDataBuilder {
 
         autoreleasepool {
 
-            let boundaryStr  = "\r\n--\(boundary)\r\n"
+            let boundaryStr  = "\r\n--\(boundary)--\r\n"
             let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
             file.writeData(boundaryData)
         }
