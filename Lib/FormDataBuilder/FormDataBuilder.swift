@@ -53,7 +53,7 @@ final public class FormDataBuilder {
     }
 
     public static func tmpFileForUploadStreamWithDataForFilePath(
-        dataFilePath: String,
+        dataFilePath: FilePath,
         boundary    : String,
         name        : String,
         fileName    : String,
@@ -97,7 +97,7 @@ final public class FormDataBuilder {
 
         autoreleasepool {
 
-            let uploadDataFile = NSFileHandle(forReadingAtPath: dataFilePath)!
+            let uploadDataFile = NSFileHandle(forReadingAtPath: dataFilePath.path)!
 
             let chunkSize = 10*1024
 
