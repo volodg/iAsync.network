@@ -80,15 +80,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
                 return
             }
 
-            if let resultHolder = resultHolder {
-
-                onSuccess(resultHolder)
-            } else {
-
-                let error_ = UtilsError(description: "no resultHolder")
-                let errorWithContext = ErrorWithContext(error: error_, context: #function)
-                onError(errorWithContext)
-            }
+            onSuccess(resultHolder!)
         }
 
         let finish = { (error: ErrorWithContext?) in

@@ -56,7 +56,7 @@ final public class FormDataBuilder {
         name        : String,
         fileName    : String,
         contentType : String?,
-        params      : [String:String]?) throws -> String {
+        params      : [String:String]?) -> String {
 
         var filePath = NSUUID().UUIDString
 
@@ -64,10 +64,7 @@ final public class FormDataBuilder {
 
         NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
 
-        guard let file = NSFileHandle(forWritingAtPath: filePath) else {
-
-            throw UtilsError(description: "can not create NSFileHandle with path: \(filePath)")
-        }
+        let file = NSFileHandle(forWritingAtPath: filePath)!
 
         autoreleasepool {
 

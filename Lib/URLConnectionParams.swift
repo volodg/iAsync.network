@@ -8,9 +8,7 @@
 
 import Foundation
 
-import Result
-
-public typealias InputStreamBuilder = () -> Result<NSInputStream, NSError>
+public typealias InputStreamBuilder = () -> NSInputStream
 
 public enum HttpMethod : String {
 
