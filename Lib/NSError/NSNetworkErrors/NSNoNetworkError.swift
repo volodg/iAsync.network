@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 final public class NSNoNetworkError : NSNetworkError {
 
     override class func isMineNSNetworkError(error: NSError) -> Bool {
@@ -22,7 +24,7 @@ final public class NSNoNetworkError : NSNetworkError {
             comment:"")
     }
 
-    override public func writeErrorWithLogger(context: String) {
-        writeErrorToNSLog(context)
+    override public var logTarget: Int {
+        return LogTarget.Console.rawValue
     }
 }

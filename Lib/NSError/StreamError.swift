@@ -33,8 +33,8 @@ final public class StreamError : NetworkError {
         return self.dynamicType.init(streamError: streamError, context: context)
     }
 
-    public override var errorLogDescription: String {
-
-        return "\(self.dynamicType) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
+    override public var errorLogText: String {
+        let result = "\(self.dynamicType) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
+        return result
     }
 }

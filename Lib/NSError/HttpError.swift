@@ -48,8 +48,8 @@ final public class HttpError : NetworkError {
         return code == 404
     }
 
-    override public var errorLogDescription: String {
-
-        return "\(self.dynamicType) : \(localizedDescription) Http code:\(code) context:\(context.description)"
+    override public var errorLogText: String {
+        let result = "\(self.dynamicType) : \(localizedDescription) Http code:\(code) context:\(context.description)"
+        return result
     }
 }

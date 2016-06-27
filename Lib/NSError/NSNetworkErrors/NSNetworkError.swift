@@ -66,8 +66,8 @@ public class NSNetworkError : NetworkError {
         return self.dynamicType.init(context: context, nativeError: nativeError)
     }
 
-    public override var errorLogDescription: String {
-
-        return "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
+    override public var errorLogText: String {
+        let result = "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
+        return result
     }
 }
