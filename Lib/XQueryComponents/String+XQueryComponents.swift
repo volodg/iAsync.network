@@ -19,20 +19,8 @@ public extension String {
 
     func stringByEncodingURLQueryComponents() -> String {
 
-        //old one variant - " <>#%'\";?:@&=+$/,{}|\\^~[]`-*!()"
-        let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
-        let charactersToLeaveUnescaped = "[]." as CFStringRef
-
-        let str = self as NSString
-
-        let result = CFURLCreateStringByAddingPercentEscapes(
-            kCFAllocatorDefault,
-            str as CFString,
-            charactersToLeaveUnescaped,
-            charactersToBeEscaped,
-            CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding)) as NSString
-
-        return result as String
+        let result = stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        return result ?? self
     }
 
     func dictionaryFromQueryComponents() -> [String:[String]] {
