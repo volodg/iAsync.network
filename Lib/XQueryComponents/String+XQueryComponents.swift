@@ -10,6 +10,29 @@ import Foundation
 
 import iAsync_utils
 
+extension String {
+
+    public static var digits: String {
+        return "0123456789"
+    }
+
+    public static var lowercase: String {
+        return "abcdefghijklmnopqrstuvwxyz"
+    }
+
+    public static var uppercase: String {
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+
+    public static var letters: String {
+        return lowercase + uppercase
+    }
+
+    public static var uriQueryValueAllowed: String {
+        return "!$\'()*+,-.;?@_~" + letters + digits
+    }
+}
+
 public extension String {
 
     func stringByDecodingURLQueryComponents() -> String? {
@@ -19,7 +42,8 @@ public extension String {
 
     func stringByEncodingURLQueryComponents() -> String {
 
-        let result = stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let query  = NSCharacterSet(charactersInString: String.uriQueryValueAllowed)
+        let result = stringByAddingPercentEncodingWithAllowedCharacters(query)
         return result ?? self
     }
 
