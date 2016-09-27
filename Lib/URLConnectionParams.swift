@@ -8,6 +8,7 @@
 
 import Foundation
 
+import enum ReactiveKit.Result
 import ReactiveKit_old//???
 
 public typealias InputStreamBuilder = () -> Result<NSInputStream, NSError>

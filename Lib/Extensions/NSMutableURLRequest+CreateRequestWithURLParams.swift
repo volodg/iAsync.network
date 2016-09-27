@@ -10,6 +10,8 @@ import Foundation
 
 import let iAsync_utils.iAsync_utils_logger
 
+import enum ReactiveKit.Result
+
 extension NSMutableURLRequest {
 
     convenience init(params: URLConnectionParams) {

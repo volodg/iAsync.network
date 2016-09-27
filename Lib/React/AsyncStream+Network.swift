@@ -14,6 +14,7 @@ import struct iAsync_reactiveKit.AsyncStream
 import func iAsync_reactiveKit.create
 import func iAsync_reactiveKit.createStream
 
+import enum ReactiveKit.Result
 import ReactiveKit_old//???
 
 public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, ErrorWithContext>
