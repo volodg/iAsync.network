@@ -20,13 +20,11 @@ public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, E
 
 public struct network {
 
-    @warn_unused_result
     public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, ErrorWithContext> {
 
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    @warn_unused_result
     public static func dataStream(params: URLConnectionParams) -> NetworkStream {
 
         return create(producer: { observer -> DisposableType? in
@@ -56,7 +54,6 @@ public struct network {
         })
     }
 
-    @warn_unused_result
     public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
@@ -71,7 +68,6 @@ public struct network {
         return network.dataStream(params)
     }
 
-    @warn_unused_result
     public static func http200DataStream(params: URLConnectionParams) -> NetworkStream {
 
         let stream = dataStream(params)
@@ -88,7 +84,6 @@ public struct network {
         }
     }
 
-    @warn_unused_result
     public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
@@ -134,7 +129,6 @@ public struct network {
 
 public extension AsyncStreamType where Next == NetworkProgress {
 
-    @warn_unused_result
     public func netMapNext() -> AsyncStream<Value, AnyObject, Error> {
         return mapNext { info -> AnyObject in
             switch info {
