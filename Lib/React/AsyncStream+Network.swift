@@ -15,6 +15,7 @@ import func iAsync_reactiveKit.create
 import func iAsync_reactiveKit.createStream
 
 import enum ReactiveKit.Result
+import protocol ReactiveKit.Disposable
 import ReactiveKit_old//???
 
 public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, ErrorWithContext>
@@ -28,7 +29,7 @@ public struct network {
 
     public static func dataStream(params: URLConnectionParams) -> NetworkStream {
 
-        return create(producer: { observer -> DisposableType? in
+        return create(producer: { observer -> Disposable? in
 
             let stream = chunkedDataStream(params)
 
