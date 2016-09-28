@@ -11,8 +11,6 @@ import Foundation
 import protocol iAsync_reactiveKit.AsyncStreamInterface
 import iAsync_utils
 
-import ReactiveKit_old//???
-
 internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
 
 public enum NetworkProgress {
