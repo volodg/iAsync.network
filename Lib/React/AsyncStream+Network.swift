@@ -9,7 +9,6 @@
 import Foundation
 
 import iAsync_utils
-import protocol iAsync_reactiveKit.AsyncStreamType
 import struct iAsync_reactiveKit.AsyncStream
 import func iAsync_reactiveKit.create
 import func iAsync_reactiveKit.createStream
@@ -28,7 +27,7 @@ public struct network {
 
     public static func dataStream(params: URLConnectionParams) -> NetworkStream {
 
-        return create(producer: { observer -> Disposable in
+        return AsyncStream { observer -> Disposable in
 
             let stream = chunkedDataStream(params)
 
@@ -37,22 +36,22 @@ public struct network {
             return stream.observe { event -> () in
 
                 switch event {
-                case .Success(let value):
+                case .success(let value):
                     let result = NetworkResponse(params: params, response: value, responseData: responseData)
-                    observer(.Success(result))
-                case .Next(let chunk):
+                    observer(.success(result))
+                case .next(let chunk):
                     switch chunk {
                     case .Download(let info):
                         responseData.appendData(info.dataChunk)
                     case .Upload:
                         break
                     }
-                    observer(.Next(chunk))
-                case .Failure(let error):
-                    observer(.Failure(error))
+                    observer(.next(chunk))
+                case .failure(let error):
+                    observer(.failure(error))
                 }
             }
-        })
+        }
     }
 
     public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
@@ -77,10 +76,10 @@ public struct network {
 
             let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
             switch result {
-            case .Failure(let error):
-                return .Failure(error)
+            case .failure(let error):
+                return .failure(error)
             case .Success:
-                return .Success(response)
+                return .success(response)
             }
         }
     }
@@ -108,10 +107,10 @@ public struct network {
             if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
                 let httpError = HttpError(httpCode: statusCode, context: context)
                 let contextError = ErrorWithContext(error: httpError, context: #function)
-                return .Failure(contextError)
+                return .failure(contextError)
             }
 
-            return .Success(response)
+            return .success(response)
         }
     }
 
@@ -128,7 +127,7 @@ public struct network {
     }
 }
 
-public extension AsyncStreamType where Next == NetworkProgress {
+public extension AsyncStream where Next == NetworkProgress {
 
     public func netMapNext() -> AsyncStream<Value, AnyObject, Error> {
         return mapNext { info -> AnyObject in
