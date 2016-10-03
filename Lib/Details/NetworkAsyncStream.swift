@@ -36,7 +36,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
         self.errorTransformer = errorTransformer
     }
 
-    public func asyncWithCallbacks(success: @escaping (ValueT) -> Void, next: @escaping (NextT) -> Void, error: @escaping (ErrorT) -> Void) {
+    public func asyncWithCallbacks(_ success: @escaping (ValueT) -> Void, next: @escaping (NextT) -> Void, error: @escaping (ErrorT) -> Void) {
 
         let connection  = NSURLSessionConnection(params: self.params)
         self.connection = connection
