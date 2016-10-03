@@ -215,7 +215,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
 
             let dataTask = URLSessionDataTask()
 
-            if let response = HTTPURLResponse(url: params.url as URL, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil) {
+            if let response = HTTPURLResponse(url: params.url, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil) {
 
                 URLSession(
                     nativeConnection,
