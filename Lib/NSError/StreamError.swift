@@ -11,7 +11,7 @@ import Foundation
 final public class StreamError : NetworkError {
 
     let streamError: CFStreamError
-    private let context: CustomStringConvertible
+    fileprivate let context: CustomStringConvertible
 
     required public init(streamError: CFStreamError, context: CustomStringConvertible) {
 
@@ -28,13 +28,8 @@ final public class StreamError : NetworkError {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
-
-        return self.dynamicType.init(streamError: streamError, context: context)
-    }
-
-    override public var errorLogText: String {
-        let result = "\(self.dynamicType) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
+    /*override open var errorLogText: String {
+        let result = "\(type(of: self)) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
         return result
-    }
+    }*/
 }

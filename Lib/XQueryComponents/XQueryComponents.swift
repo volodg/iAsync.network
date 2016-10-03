@@ -12,7 +12,7 @@ private let queryComponentSeparator = "&"
 
 public struct XQueryComponents {
 
-    static public func toString(components: [String:[String]]) -> String {
+    static public func toString(_ components: [String:[String]]) -> String {
 
         var result = [String]()
 
@@ -33,11 +33,11 @@ public struct XQueryComponents {
             }
         }
 
-        return result.joinWithSeparator(queryComponentSeparator)
+        return result.joined(separator: queryComponentSeparator)
     }
 
-    static public func toData(components: [String:[String]]) -> NSData {
+    static public func toData(_ components: [String:[String]]) -> Data {
 
-        return toString(components).dataUsingEncoding(NSUTF8StringEncoding)!
+        return toString(components).data(using: String.Encoding.utf8)!
     }
 }

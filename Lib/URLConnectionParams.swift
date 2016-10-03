@@ -10,7 +10,7 @@ import Foundation
 
 import enum ReactiveKit.Result
 
-public typealias InputStreamBuilder = () -> Result<NSInputStream, NSError>
+public typealias InputStreamBuilder = () -> Result<InputStream, NSError>
 
 public enum HttpMethod : String {
 
@@ -29,8 +29,8 @@ public struct URLConnectionParams : CustomStringConvertible {
 
     public typealias HeadersType = [String:String]
 
-    public let url       : NSURL
-    public let httpBody  : NSData?
+    public let url       : URL
+    public let httpBody  : Data?
     public let httpMethod: HttpMethod
     public let headers   : HeadersType?
 
@@ -39,8 +39,8 @@ public struct URLConnectionParams : CustomStringConvertible {
     public let certificateCallback      : ShouldAcceptCertificateForHost?
 
     public init(
-        url                      : NSURL,
-        httpBody                 : NSData? = nil,
+        url                      : URL,
+        httpBody                 : Data? = nil,
         httpMethod               : HttpMethod? = nil,
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
