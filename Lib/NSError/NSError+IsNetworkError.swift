@@ -18,12 +18,12 @@ public extension NSError {
 
         guard let type = CFNetworkErrors(rawValue: CInt(code)) else { return false }
 
-        return type == .CFURLErrorTimedOut
-            || type == .CFURLErrorCannotFindHost
-            || type == .CFURLErrorCannotConnectToHost
-            || type == .CFURLErrorNetworkConnectionLost
-            || type == .CFURLErrorNotConnectedToInternet
-            || type == .CFURLErrorSecureConnectionFailed
+        return type == .cfurlErrorTimedOut
+            || type == .cfurlErrorCannotFindHost
+            || type == .cfurlErrorCannotConnectToHost
+            || type == .cfurlErrorNetworkConnectionLost
+            || type == .cfurlErrorNotConnectedToInternet
+            || type == .cfurlErrorSecureConnectionFailed
     }
 
     var socketIsNoLongerUsable: Bool {
@@ -38,6 +38,6 @@ public extension NSError {
         }
 
         let type = CFNetworkErrors(rawValue: CInt(code))
-        return type == .CFURLErrorCallIsActive
+        return type == .cfurlErrorCallIsActive
     }
 }

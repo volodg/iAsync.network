@@ -12,7 +12,7 @@ private let indexes = Set([301, 302, 303, 307])
 
 final public class HttpFlagChecker {
 
-    public static func isDownloadErrorFlag(statusCode: Int) -> Bool {
+    public static func isDownloadErrorFlag(_ statusCode: Int) -> Bool {
 
         let result =
             !isSuccessFlag (statusCode) &&
@@ -21,12 +21,12 @@ final public class HttpFlagChecker {
         return result
     }
 
-    public static func isRedirectFlag(statusCode: Int) -> Bool {
+    public static func isRedirectFlag(_ statusCode: Int) -> Bool {
 
         return indexes.contains(statusCode)
     }
 
-    public static func isSuccessFlag(statusCode: Int) -> Bool {
+    public static func isSuccessFlag(_ statusCode: Int) -> Bool {
         return 200 == statusCode
     }
 }

@@ -13,7 +13,7 @@ final public class NetworkUploadProgressCallback : NSObject, UploadProgress {
     public let params  : URLConnectionParams
     public let progress: Double
 
-    public var url: NSURL {
+    public var url: URL {
         return params.url
     }
 

@@ -16,7 +16,7 @@ extension NSMutableURLRequest {
 
     convenience init(params: URLConnectionParams) {
 
-        let inputStream: NSInputStream?
+        let inputStream: InputStream?
         if let factory = params.httpBodyStreamBuilder {
 
             let streamResult = factory()
@@ -33,16 +33,16 @@ extension NSMutableURLRequest {
         assert(!((params.httpBody != nil) && (inputStream != nil)))
 
         self.init(
-            URL            : params.url,
-            cachePolicy    : .ReloadIgnoringLocalCacheData,
+            url            : params.url,
+            cachePolicy    : .reloadIgnoringLocalCacheData,
             timeoutInterval: 60.0)
 
-        self.HTTPBodyStream = inputStream
+        self.httpBodyStream = inputStream
         if params.httpBody != nil {
-            self.HTTPBody = params.httpBody
+            self.httpBody = params.httpBody
         }
 
         self.allHTTPHeaderFields = params.headers
-        self.HTTPMethod          = params.httpMethod.rawValue
+        self.httpMethod          = params.httpMethod.rawValue
     }
 }

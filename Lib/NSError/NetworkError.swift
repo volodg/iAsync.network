@@ -10,9 +10,9 @@ import Foundation
 
 import iAsync_utils
 
-public class NetworkError : UtilsError {
+open class NetworkError : UtilsError {
 
-    public override class func iAsyncErrorsDomain() -> String {
+    open override class func iAsyncErrorsDomain() -> String {
 
         return "com.just_for_fun.network.library"
     }

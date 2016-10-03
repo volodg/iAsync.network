@@ -10,8 +10,8 @@ import Foundation
 
 final public class HttpError : NetworkError {
 
-    private let context: CustomStringConvertible
-    private let httpCode: CFIndex
+    fileprivate let context: CustomStringConvertible
+    fileprivate let httpCode: CFIndex
 
     public required init(httpCode: CFIndex, context: CustomStringConvertible) {
 
@@ -48,8 +48,8 @@ final public class HttpError : NetworkError {
         return code == 404
     }
 
-    override public var errorLogText: String {
-        let result = "\(self.dynamicType) : \(localizedDescription) Http code:\(code) context:\(context.description)"
+    /*override open var errorLogText: String {
+        let result = "\(type(of: self)) : \(localizedDescription) Http code:\(code) context:\(context.description)"
         return result
-    }
+    }*/
 }

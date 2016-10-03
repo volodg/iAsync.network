@@ -9,9 +9,7 @@
 import Foundation
 
 import iAsync_utils
-import struct iAsync_reactiveKit.AsyncStream
-import func iAsync_reactiveKit.create
-import func iAsync_reactiveKit.createStream
+import iAsync_reactiveKit
 
 import enum ReactiveKit.Result
 import protocol ReactiveKit.Disposable
@@ -20,18 +18,18 @@ public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, E
 
 public struct network {
 
-    public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, ErrorWithContext> {
+    public static func chunkedDataStream(_ params: URLConnectionParams) -> AsyncStream<HTTPURLResponse, NetworkProgress, ErrorWithContext> {
 
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    public static func dataStream(params: URLConnectionParams) -> NetworkStream {
+    public static func dataStream(_ params: URLConnectionParams) -> NetworkStream {
 
         return AsyncStream { observer -> Disposable in
 
             let stream = chunkedDataStream(params)
 
-            let responseData = NSMutableData()
+            var responseData = Data()
 
             return stream.observe { event -> () in
 
@@ -41,9 +39,9 @@ public struct network {
                     observer(.success(result))
                 case .next(let chunk):
                     switch chunk {
-                    case .Download(let info):
-                        responseData.appendData(info.dataChunk)
-                    case .Upload:
+                    case .download(let info):
+                        responseData.append(info.dataChunk)
+                    case .upload:
                         break
                     }
                     observer(.next(chunk))
@@ -54,7 +52,7 @@ public struct network {
         }
     }
 
-    public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func dataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -68,7 +66,7 @@ public struct network {
         return network.dataStream(params)
     }
 
-    public static func http200DataStream(params: URLConnectionParams) -> NetworkStream {
+    public static func http200DataStream(_ params: URLConnectionParams) -> NetworkStream {
 
         let stream = dataStream(params)
 
@@ -78,13 +76,13 @@ public struct network {
             switch result {
             case .failure(let error):
                 return .failure(error)
-            case .Success:
+            case .success:
                 return .success(response)
             }
         }
     }
 
-    public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func http200DataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -98,9 +96,9 @@ public struct network {
         return network.http200DataStream(params)
     }
 
-    private static func downloadStatusCodeResponseAnalyzer(context: URLConnectionParams) -> NSHTTPURLResponse -> Result<NSHTTPURLResponse, ErrorWithContext> {
+    fileprivate static func downloadStatusCodeResponseAnalyzer(_ context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
 
-        return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, ErrorWithContext> in
+        return { (response: HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> in
 
             let statusCode = response.statusCode
 
@@ -114,7 +112,7 @@ public struct network {
         }
     }
 
-    private static func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErrorTransformer {
+    fileprivate static func networkErrorAnalyzer(_ context: URLConnectionParams) -> JNetworkErrorTransformer {
 
         return { error -> NSError in
 
@@ -127,14 +125,14 @@ public struct network {
     }
 }
 
-public extension AsyncStream where Next == NetworkProgress {
+public extension AsyncStreamType where NextT == NetworkProgress {
 
-    public func netMapNext() -> AsyncStream<Value, AnyObject, Error> {
+    public func netMapNext() -> AsyncStream<ValueT, AnyObject, ErrorT> {
         return mapNext { info -> AnyObject in
             switch info {
-            case .Download(let chunk):
+            case .download(let chunk):
                 return chunk
-            case .Upload(let chunk):
+            case .upload(let chunk):
                 return chunk
             }
         }

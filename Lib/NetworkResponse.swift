@@ -11,8 +11,8 @@ import Foundation
 public struct NetworkResponse : CustomStringConvertible {
 
     public let params      : URLConnectionParams
-    public let response    : NSHTTPURLResponse
-    public let responseData: NSData
+    public let response    : HTTPURLResponse
+    public let responseData: Data
 
     public var description: String {
 
@@ -26,7 +26,7 @@ public struct NetworkResponse : CustomStringConvertible {
         return "<NetworkResponse: params:\(params) response.allHeaderFields:\(response.allHeaderFields) response.statusCode:\(response.statusCode) responseData:\(responseStr)>"
     }
 
-    public init(params: URLConnectionParams, response: NSHTTPURLResponse, responseData: NSData) {
+    public init(params: URLConnectionParams, response: HTTPURLResponse, responseData: Data) {
 
         self.params       = params
         self.response     = response

@@ -9,7 +9,7 @@ import iAsync_utils
 
 import Foundation
 
-internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
+internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
 
     func clearCallbacks() {
 
@@ -26,28 +26,24 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     internal var didUploadDataBlock          : DidUploadDataHandler?
     internal var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
 
-    private let params: URLConnectionParams
+    fileprivate let params: URLConnectionParams
 
     internal init(params: URLConnectionParams) {
 
         self.params = params
     }
 
-    private var sessionTask: NSURLSessionTask?
+    fileprivate var sessionTask: URLSessionTask?
 
     internal func start() {
 
-        if params.url.fileURL {
-            if let path = params.url.path {
-                processLocalFileWithPath(path)
-            } else {
-                assert(false)
-            }
+        if params.url.isFileURL {
+            processLocalFileWithPath(params.url.path)
             return
         }
 
-        let request = NSMutableURLRequest(params: params)
-        let task    = nativeConnection.dataTaskWithRequest(request)
+        let request = NSMutableURLRequest(params: params) as URLRequest
+        let task    = nativeConnection.dataTask(with: request)
         sessionTask = task
 
         task.resume()
@@ -65,8 +61,8 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         nativeConnection.invalidateAndCancel()
     }
 
-    private var _downloadedBytesCount: Int64 = 0
-    private(set) internal var downloadedBytesCount: Int64 {
+    fileprivate var _downloadedBytesCount: Int64 = 0
+    fileprivate(set) internal var downloadedBytesCount: Int64 {
         get {
             return _downloadedBytesCount
         }
@@ -75,8 +71,8 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         }
     }
 
-    private var _totalBytesCount: Int64 = 0
-    private(set) internal var totalBytesCount: Int64 {
+    fileprivate var _totalBytesCount: Int64 = 0
+    fileprivate(set) internal var totalBytesCount: Int64 {
         get {
             return _totalBytesCount
         }
@@ -85,25 +81,25 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         }
     }
 
-    private var _nativeConnection: NSURLSession?
-    private var nativeConnection: NSURLSession {
+    fileprivate var _nativeConnection: Foundation.URLSession?
+    fileprivate var nativeConnection: Foundation.URLSession {
 
         if let nativeConnection = _nativeConnection {
 
             return nativeConnection
         }
 
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let configuration = URLSessionConfiguration.default
 
         configuration.timeoutIntervalForResource = 120.0
 
-        let queue = NSOperationQueue.currentQueue()
+        let queue = OperationQueue.current
 
         if queue == nil {
             fatalError("queue should be determined")
         }
 
-        let nativeConnection = NSURLSession(
+        let nativeConnection = Foundation.URLSession(
             configuration: configuration,
             delegate     : self,
             delegateQueue: queue)
@@ -113,55 +109,55 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         return nativeConnection
     }
 
-    func finishLoading(error: ErrorWithContext?) {
+    func finishLoading(_ error: ErrorWithContext?) {
 
         let finish = self.didFinishLoadingBlock
 
         cancel()
-        finish?(error: error)
+        finish?(error)
     }
 
-    internal func URLSession(session: NSURLSession, didBecomeInvalidWithError error: NSError?) {
+    internal func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
 
         if let error = error {
-            let contextError = ErrorWithContext(error: error, context: #function)
+            let contextError = ErrorWithContext(error: error as NSError, context: #function)
             finishLoading(contextError)
         }
     }
 
     internal func URLSession(
-        session : NSURLSession!,
-        dataTask: NSURLSessionDataTask!,
-        didReceiveResponse response: NSURLResponse,
-        completionHandler: (NSURLSessionResponseDisposition) -> Void) {
+        _ session : Foundation.URLSession!,
+        dataTask: URLSessionDataTask!,
+        didReceiveResponse response: URLResponse,
+        completionHandler: (Foundation.URLSession.ResponseDisposition) -> Void) {
 
-        if let httpResponse = response as? NSHTTPURLResponse {
+        if let httpResponse = response as? HTTPURLResponse {
 
             let strContentLength  = httpResponse.allHeaderFields["Content-Length"] as? NSNumber
-            _totalBytesCount      = strContentLength?.longLongValue ?? 0
+            _totalBytesCount      = strContentLength?.int64Value ?? 0
             _downloadedBytesCount = 0
 
-            didReceiveResponseBlock?(response: httpResponse)
+            didReceiveResponseBlock?(httpResponse)
         } else {
 
             iAsync_utils_logger.logError("unexpected response: \(response)", context: #function)
         }
 
-        completionHandler(.Allow)
+        completionHandler(.allow)
     }
 
     internal func URLSession(
-        session : NSURLSession,
-        dataTask: NSURLSessionDataTask,
-        didReceiveData data: NSData) {
+        _ session : Foundation.URLSession,
+        dataTask: URLSessionDataTask,
+        didReceiveData data: Data) {
 
-        _downloadedBytesCount += data.length
-        self.didReceiveDataBlock?(data: data)
+        _downloadedBytesCount += data.count
+        self.didReceiveDataBlock?(data)
     }
 
     internal func URLSession(
-        session: NSURLSession,
-        task   : NSURLSessionTask!,
+        _ session: Foundation.URLSession,
+        task   : URLSessionTask!,
         didCompleteWithError error: NSError?) {
 
         let contextError = error.flatMap { ErrorWithContext(error: $0, context: #function) }
@@ -169,8 +165,8 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
     }
 
     internal func URLSession(
-        session: NSURLSession,
-        task: NSURLSessionTask,
+        _ session: Foundation.URLSession,
+        task: URLSessionTask,
         didSendBodyData bytesSent: Int64,
         totalBytesSent: Int64,
         totalBytesExpectedToSend: Int64) {
@@ -183,26 +179,26 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
 
         if totalBytesExpectedToWrite <= 0 {
 
-            didUploadDataBlock(progress: 0)
+            didUploadDataBlock(0)
             return
         }
 
-        didUploadDataBlock(progress: Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
+        didUploadDataBlock(Double(totalBytesSent)/Double(totalBytesExpectedToWrite))
     }
 
-    internal func URLSession(
-        session: NSURLSession,
-        didReceiveChallenge challenge: NSURLAuthenticationChallenge,
-        completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+    internal func urlSession(
+        _ session: URLSession,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
 
         if let callback = shouldAcceptCertificateBlock {
 
-            callback(callback: completionHandler)
+            callback(completionHandler)
         } else {
 
             if let trust = challenge.protectionSpace.serverTrust {
-                let credentials = NSURLCredential(forTrust: trust)
-                completionHandler(.UseCredential, credentials)
+                let credentials = URLCredential(trust: trust)
+                completionHandler(.useCredential, credentials)
             } else {
 
                 assert(false)
@@ -210,16 +206,16 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
         }
     }
 
-    private func processLocalFileWithPath(path: String) {
+    fileprivate func processLocalFileWithPath(_ path: String) {
 
         //STODO read file in separate thread
         //STODO read big files by chunks
         do {
-            let data = try NSData(contentsOfFile: path, options: [])
+            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: [])
 
-            let dataTask = NSURLSessionDataTask()
+            let dataTask = URLSessionDataTask()
 
-            if let response = NSHTTPURLResponse(URL: params.url, statusCode: 200, HTTPVersion: "HTTP/1.1", headerFields: nil) {
+            if let response = HTTPURLResponse(url: params.url as URL, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: nil) {
 
                 URLSession(
                     nativeConnection,
@@ -228,7 +224,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
                     completionHandler: { _ in })
             } else {
 
-                iAsync_utils_logger.logError("can not create NSHTTPURLResponse", context: #function)
+                iAsync_utils_logger.logError("can not create HTTPURLResponse", context: #function)
             }
 
             URLSession(nativeConnection, dataTask: dataTask, didReceiveData: data)
@@ -236,7 +232,7 @@ internal class NSURLSessionConnection : NSObject, NSURLSessionDelegate {
             URLSession(nativeConnection, task: dataTask, didCompleteWithError:nil)
 
         } catch let error as NSError {
-            self.URLSession(self.nativeConnection, didBecomeInvalidWithError:error)
+            self.urlSession(self.nativeConnection, didBecomeInvalidWithError:error)
         }
     }
 

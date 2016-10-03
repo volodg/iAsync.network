@@ -11,24 +11,24 @@ import Foundation
 import protocol iAsync_reactiveKit.AsyncStreamInterface
 import iAsync_utils
 
-internal typealias JNetworkErrorTransformer = (error: NSError) -> NSError
+internal typealias JNetworkErrorTransformer = (_ error: NSError) -> NSError
 
 public enum NetworkProgress {
 
-    case Download(NetworkResponseDataCallback)
-    case Upload(NetworkUploadProgressCallback)
+    case download(NetworkResponseDataCallback)
+    case upload(NetworkUploadProgressCallback)
 }
 
 final class NetworkAsyncStream : AsyncStreamInterface {
 
-    typealias Value = NSHTTPURLResponse
-    typealias Next  = NetworkProgress
-    typealias Error = ErrorWithContext
+    typealias ValueT = HTTPURLResponse
+    typealias NextT  = NetworkProgress
+    typealias ErrorT = ErrorWithContext
 
-    private let params          : URLConnectionParams
-    private let errorTransformer: JNetworkErrorTransformer?
+    fileprivate let params          : URLConnectionParams
+    fileprivate let errorTransformer: JNetworkErrorTransformer?
 
-    private var connection: NSURLSessionConnection?
+    fileprivate var connection: NSURLSessionConnection?
 
     init(params: URLConnectionParams, errorTransformer: JNetworkErrorTransformer?) {
 
@@ -36,7 +36,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
         self.errorTransformer = errorTransformer
     }
 
-    func asyncWithCallbacks(success onSuccess: Value -> Void, next: Next  -> Void, error onError: Error -> Void) {
+    public func asyncWithCallbacks(success: @escaping (ValueT) -> Void, next: @escaping (NextT) -> Void, error: @escaping (ErrorT) -> Void) {
 
         let connection  = NSURLSessionConnection(params: self.params)
         self.connection = connection
@@ -52,43 +52,43 @@ final class NetworkAsyncStream : AsyncStreamInterface {
                 downloadedBytesCount: connection.downloadedBytesCount,
                 totalBytesCount     : connection.totalBytesCount)
 
-            next(.Download(progressData))
+            next(.download(progressData))
         }
 
         connection.didUploadDataBlock = { progress -> () in
 
             let uploadProgress = NetworkUploadProgressCallback(params: unretainedSelf.params, progress: progress)
-            next(.Upload(uploadProgress))
+            next(.upload(uploadProgress))
         }
 
-        var resultHolder: Value?
+        var resultHolder: ValueT?
 
         let errorTransformer = self.errorTransformer
 
-        let finishWithError = { (error: ErrorWithContext?) -> () in
+        let finishWithError = { (errorVal: ErrorWithContext?) -> () in
 
-            if let error = error {
+            if let error_ = errorVal {
 
                 let passError: NSError
                 if let errorTransformer = errorTransformer {
-                    passError = errorTransformer(error: error.error)
+                    passError = errorTransformer(error_.error)
                 } else {
-                    passError = error.error
+                    passError = error_.error
                 }
 
-                let errorWithContext = ErrorWithContext(error: passError, context: error.context)
-                onError(errorWithContext)
+                let errorWithContext = ErrorWithContext(error: passError, context: error_.context)
+                error(errorWithContext)
                 return
             }
 
             if let resultHolder = resultHolder {
 
-                onSuccess(resultHolder)
+                success(resultHolder)
             } else {
 
                 let error_ = UtilsError(description: "no resultHolder")
                 let errorWithContext = ErrorWithContext(error: error_, context: #function)
-                onError(errorWithContext)
+                error(errorWithContext)
             }
         }
 

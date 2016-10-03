@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NSNetworkError : NetworkError {
+open class NSNetworkError : NetworkError {
 
     let context: URLConnectionParams
     let nativeError: NSError
@@ -25,16 +25,16 @@ public class NSNetworkError : NetworkError {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var localizedDescription: String {
+    open override var localizedDescription: String {
 
         return NSLocalizedString(
             "J_NETWORK_GENERIC_ERROR",
-            bundle: NSBundle(forClass: self.dynamicType),
+            bundle: Bundle(for: type(of: self)),
             comment:"")
     }
 
-    public static func createJNSNetworkErrorWithContext(
-        context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
+    open static func createJNSNetworkErrorWithContext(
+        _ context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
 
         let selfType: NSNetworkError.Type
 
@@ -45,7 +45,7 @@ public class NSNetworkError : NetworkError {
 
         let selfType_ = { () -> NSNetworkError.Type? in
 
-            return errorClasses.indexOf { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
+            return errorClasses.index { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
         }()
 
         if let selfType_ = selfType_ {
@@ -57,17 +57,12 @@ public class NSNetworkError : NetworkError {
         return selfType.init(context: context, nativeError: nativeError)
     }
 
-    class func isMineNSNetworkError(error: NSError) -> Bool {
+    class func isMineNSNetworkError(_ error: NSError) -> Bool {
         return false
     }
 
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
-
-        return self.dynamicType.init(context: context, nativeError: nativeError)
-    }
-
-    override public var errorLogText: String {
-        let result = "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
+    /*override open var errorLogText: String {
+        let result = "\(type(of: self)) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
         return result
-    }
+    }*/
 }
