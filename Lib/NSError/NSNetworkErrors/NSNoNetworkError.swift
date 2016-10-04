@@ -23,8 +23,9 @@ final public class NSNoNetworkError : NSNetworkError {
             bundle : Bundle(for: type(of: self)),
             comment:"")
     }
+}
 
-    /*override public var logTarget: Int {
-        return LogTarget.Console.rawValue
-    }*/
+public extension LoggedObject where Self : NSNoNetworkError {
+
+    var logTarget: LogTarget { return LogTarget.console }
 }
