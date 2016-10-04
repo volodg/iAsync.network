@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 final public class StreamError : NetworkError {
 
     let streamError: CFStreamError
@@ -27,9 +29,13 @@ final public class StreamError : NetworkError {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
-    /*override open var errorLogText: String {
+public extension LoggedObject where Self : StreamError {
+
+    var errorLogText: String {
+
         let result = "\(type(of: self)) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
         return result
-    }*/
+    }
 }

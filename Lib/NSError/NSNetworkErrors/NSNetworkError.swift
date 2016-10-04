@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 open class NSNetworkError : NetworkError {
 
     let context: URLConnectionParams
@@ -60,9 +62,13 @@ open class NSNetworkError : NetworkError {
     class func isMineNSNetworkError(_ error: NSError) -> Bool {
         return false
     }
+}
 
-    /*override open var errorLogText: String {
+public extension LoggedObject where Self : NSNetworkError {
+
+    var errorLogText: String {
+
         let result = "\(type(of: self)) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
         return result
-    }*/
+    }
 }
