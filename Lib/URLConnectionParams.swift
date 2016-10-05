@@ -14,15 +14,15 @@ public typealias InputStreamBuilder = () -> Result<InputStream, NSError>
 
 public enum HttpMethod : String {
 
-    case CONNECT = "CONNECT"
-    case DELETE  = "DELETE"
-    case GET     = "GET"
-    case HEAD    = "HEAD"
-    case OPTIONS = "OPTIONS"
-    case PATCH   = "PATCH"
-    case POST    = "POST"
-    case PUT     = "PUT"
-    case TRACE   = "TRACE"
+    case connect = "CONNECT"
+    case delete  = "DELETE"
+    case get     = "GET"
+    case head    = "HEAD"
+    case options = "OPTIONS"
+    case patch   = "PATCH"
+    case post    = "POST"
+    case put     = "PUT"
+    case trace   = "TRACE"
 }
 
 public struct URLConnectionParams : CustomStringConvertible {
@@ -49,7 +49,7 @@ public struct URLConnectionParams : CustomStringConvertible {
 
         self.url        = url
         self.httpBody   = httpBody
-        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .POST : .GET)
+        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .post : .get)
         self.headers    = headers
         self.totalBytesExpectedToWrite = totalBytesExpectedToWrite
         self.httpBodyStreamBuilder     = httpBodyStreamBuilder
