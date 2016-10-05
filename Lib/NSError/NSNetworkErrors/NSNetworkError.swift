@@ -10,7 +10,7 @@ import Foundation
 
 import iAsync_utils
 
-open class NSNetworkError : NetworkError {
+public class NSNetworkError : NetworkError {
 
     let context: URLConnectionParams
     let nativeError: NSError
@@ -27,7 +27,7 @@ open class NSNetworkError : NetworkError {
         fatalError("init(coder:) has not been implemented")
     }
 
-    open override var localizedDescription: String {
+    public override var localizedDescription: String {
 
         return NSLocalizedString(
             "J_NETWORK_GENERIC_ERROR",
@@ -35,7 +35,7 @@ open class NSNetworkError : NetworkError {
             comment:"")
     }
 
-    open static func createJNSNetworkErrorWithContext(
+    public static func createJNSNetworkErrorWithContext(
         _ context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
 
         let selfType: NSNetworkError.Type

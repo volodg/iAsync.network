@@ -48,7 +48,7 @@ final public class HttpError : NetworkError {
         return code == 404
     }
 
-    /*override open var errorLogText: String {
+    /*override swift3 open var errorLogText: String {
         let result = "\(type(of: self)) : \(localizedDescription) Http code:\(code) context:\(context.description)"
         return result
     }*/
