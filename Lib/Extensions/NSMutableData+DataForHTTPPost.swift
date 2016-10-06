@@ -10,30 +10,30 @@ import Foundation
 
 public extension NSMutableData {
 
-    static func dataForHTTPPostWithData(data: NSData, fileName: String, parameterName: String, boundary: String) -> Self {
+    static func dataForHTTPPostWithData(_ data: Data, fileName: String, parameterName: String, boundary: String) -> Self {
 
-        let result = self.init(capacity: data.length + 512)!
+        let result = self.init(capacity: data.count + 512)!
 
-        result.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        result.appendData("Content-Disposition: form-data; name=\"\(parameterName)\"; filename=\"\(fileName)\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        result.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+        result.append("Content-Disposition: form-data; name=\"\(parameterName)\"; filename=\"\(fileName)\"\r\n".data(using: String.Encoding.utf8)!)
 
-        result.appendData("Content-Type: application/octet-stream\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        result.append("Content-Type: application/octet-stream\r\n\r\n".data(using: String.Encoding.utf8)!)
 
-        result.appendData(data)
+        result.append(data)
 
-        result.appendData("\r\n--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        result.append("\r\n--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
 
         return result
     }
 
-    func appendHTTPParameters(parameters: NSDictionary, boundary: NSString) {
+    func appendHTTPParameters(_ parameters: NSDictionary, boundary: NSString) {
 
-        parameters.enumerateKeysAndObjectsUsingBlock { (key: AnyObject!, value: AnyObject!, stop: UnsafeMutablePointer<ObjCBool>) -> Void in
+        parameters.enumerateKeysAndObjects(options: []) { (key: Any, value: Any, stop: UnsafeMutablePointer<ObjCBool>) in
 
-            self.appendData("--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-            self.appendData("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-            self.appendData("\(value)".dataUsingEncoding(NSUTF8StringEncoding)!)
-            self.appendData("\r\n--\(boundary)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+            self.append("--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
+            self.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+            self.append("\(value)".data(using: String.Encoding.utf8)!)
+            self.append("\r\n--\(boundary)\r\n".data(using: String.Encoding.utf8)!)
         }
     }
 }

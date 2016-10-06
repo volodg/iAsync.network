@@ -10,8 +10,8 @@ import Foundation
 
 import iAsync_utils
 
-public typealias DidReceiveResponseHandler      = (response: NSHTTPURLResponse) -> ()
-public typealias DidFinishLoadingHandler        = (error: ErrorWithContext?) -> ()
-public typealias DidReceiveDataHandler          = (data: NSData) -> ()
-public typealias DidUploadDataHandler           = (progress: Double) -> ()
-public typealias ShouldAcceptCertificateForHost = (callback: (NSURLSessionAuthChallengeDisposition, NSURLCredential!) -> Void) -> Void
+public typealias DidReceiveResponseHandler      = (_ response: HTTPURLResponse) -> ()
+public typealias DidFinishLoadingHandler        = (_ error: ErrorWithContext?) -> ()
+public typealias DidReceiveDataHandler          = (_ data: Data) -> ()
+public typealias DidUploadDataHandler           = (_ progress: Double) -> ()
+public typealias ShouldAcceptCertificateForHost = (_ callback: (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) -> Void

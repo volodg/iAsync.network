@@ -37,13 +37,13 @@ public extension String {
 
     func stringByDecodingURLQueryComponents() -> String? {
 
-        return stringByRemovingPercentEncoding
+        return removingPercentEncoding
     }
 
     func stringByEncodingURLQueryComponents() -> String {
 
-        let query  = NSCharacterSet(charactersInString: String.uriQueryValueAllowed)
-        let result = stringByAddingPercentEncodingWithAllowedCharacters(query)
+        let query  = CharacterSet(charactersIn: String.uriQueryValueAllowed)
+        let result = addingPercentEncoding(withAllowedCharacters: query)
         return result ?? self
     }
 
@@ -51,9 +51,9 @@ public extension String {
 
         var result = [String:[String]]()
 
-        for keyValuePairString in componentsSeparatedByString("&") {
+        for keyValuePairString in components(separatedBy: "&") {
 
-            let keyValuePairArray = keyValuePairString.componentsSeparatedByString("=") as [String]
+            let keyValuePairArray = keyValuePairString.components(separatedBy: "=") as [String]
 
             // Verify that there is at least one key, and at least one value.  Ignore extra = signs
             if keyValuePairArray.count < 2 {

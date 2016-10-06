@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 public class NSNetworkError : NetworkError {
 
     let context: URLConnectionParams
@@ -29,12 +31,12 @@ public class NSNetworkError : NetworkError {
 
         return NSLocalizedString(
             "J_NETWORK_GENERIC_ERROR",
-            bundle: NSBundle(forClass: self.dynamicType),
+            bundle: Bundle(for: type(of: self)),
             comment:"")
     }
 
     public static func createJNSNetworkErrorWithContext(
-        context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
+        _ context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
 
         let selfType: NSNetworkError.Type
 
@@ -45,7 +47,7 @@ public class NSNetworkError : NetworkError {
 
         let selfType_ = { () -> NSNetworkError.Type? in
 
-            return errorClasses.indexOf { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
+            return errorClasses.index { return $0.isMineNSNetworkError(nativeError) }.flatMap { errorClasses[$0] }
         }()
 
         if let selfType_ = selfType_ {
@@ -57,17 +59,16 @@ public class NSNetworkError : NetworkError {
         return selfType.init(context: context, nativeError: nativeError)
     }
 
-    class func isMineNSNetworkError(error: NSError) -> Bool {
+    class func isMineNSNetworkError(_ error: NSError) -> Bool {
         return false
     }
+}
 
-    public override func copyWithZone(zone: NSZone) -> AnyObject {
+public extension LoggedObject where Self : NSNetworkError {
 
-        return self.dynamicType.init(context: context, nativeError: nativeError)
-    }
+    var errorLogText: String {
 
-    override public var errorLogText: String {
-        let result = "\(self.dynamicType) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
+        let result = "\(type(of: self)) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
         return result
     }
 }

@@ -8,29 +8,29 @@
 
 import Foundation
 
-import ReactiveKit_old
+import enum ReactiveKit.Result
 
-public typealias InputStreamBuilder = () -> Result<NSInputStream, NSError>
+public typealias InputStreamBuilder = () -> Result<InputStream, NSError>
 
 public enum HttpMethod : String {
 
-    case CONNECT = "CONNECT"
-    case DELETE  = "DELETE"
-    case GET     = "GET"
-    case HEAD    = "HEAD"
-    case OPTIONS = "OPTIONS"
-    case PATCH   = "PATCH"
-    case POST    = "POST"
-    case PUT     = "PUT"
-    case TRACE   = "TRACE"
+    case connect = "CONNECT"
+    case delete  = "DELETE"
+    case get     = "GET"
+    case head    = "HEAD"
+    case options = "OPTIONS"
+    case patch   = "PATCH"
+    case post    = "POST"
+    case put     = "PUT"
+    case trace   = "TRACE"
 }
 
 public struct URLConnectionParams : CustomStringConvertible {
 
     public typealias HeadersType = [String:String]
 
-    public let url       : NSURL
-    public let httpBody  : NSData?
+    public let url       : URL
+    public let httpBody  : Data?
     public let httpMethod: HttpMethod
     public let headers   : HeadersType?
 
@@ -39,8 +39,8 @@ public struct URLConnectionParams : CustomStringConvertible {
     public let certificateCallback      : ShouldAcceptCertificateForHost?
 
     public init(
-        url                      : NSURL,
-        httpBody                 : NSData? = nil,
+        url                      : URL,
+        httpBody                 : Data? = nil,
         httpMethod               : HttpMethod? = nil,
         headers                  : HeadersType? = nil,
         totalBytesExpectedToWrite: Int64 = 0,
@@ -49,7 +49,7 @@ public struct URLConnectionParams : CustomStringConvertible {
 
         self.url        = url
         self.httpBody   = httpBody
-        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .POST : .GET)
+        self.httpMethod = httpMethod ?? ( (httpBody != nil || httpBodyStreamBuilder != nil) ? .post : .get)
         self.headers    = headers
         self.totalBytesExpectedToWrite = totalBytesExpectedToWrite
         self.httpBodyStreamBuilder     = httpBodyStreamBuilder

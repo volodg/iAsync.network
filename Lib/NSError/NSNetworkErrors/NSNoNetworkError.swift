@@ -12,7 +12,7 @@ import iAsync_utils
 
 final public class NSNoNetworkError : NSNetworkError {
 
-    override class func isMineNSNetworkError(error: NSError) -> Bool {
+    override class func isMineNSNetworkError(_ error: NSError) -> Bool {
         return error.isNetworkError || error.socketIsNoLongerUsable
     }
 
@@ -20,11 +20,12 @@ final public class NSNoNetworkError : NSNetworkError {
 
         return NSLocalizedString(
             "J_NETWORK_NO_INTERNET_ERROR",
-            bundle : NSBundle(forClass: self.dynamicType),
+            bundle : Bundle(for: type(of: self)),
             comment:"")
     }
+}
 
-    override public var logTarget: Int {
-        return LogTarget.Console.rawValue
-    }
+public extension LoggedObject where Self : NSNoNetworkError {
+
+    var logTarget: LogTarget { return LogTarget.console }
 }

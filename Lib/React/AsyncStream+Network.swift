@@ -9,55 +9,50 @@
 import Foundation
 
 import iAsync_utils
-import protocol iAsync_reactiveKit.AsyncStreamType
-import struct iAsync_reactiveKit.AsyncStream
-import func iAsync_reactiveKit.create
-import func iAsync_reactiveKit.createStream
+import iAsync_reactiveKit
 
-import ReactiveKit_old
+import enum ReactiveKit.Result
+import protocol ReactiveKit.Disposable
 
 public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, ErrorWithContext>
 
 public struct network {
 
-    @warn_unused_result
-    public static func chunkedDataStream(params: URLConnectionParams) -> AsyncStream<NSHTTPURLResponse, NetworkProgress, ErrorWithContext> {
+    public static func chunkedDataStream(_ params: URLConnectionParams) -> AsyncStream<HTTPURLResponse, NetworkProgress, ErrorWithContext> {
 
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    @warn_unused_result
-    public static func dataStream(params: URLConnectionParams) -> NetworkStream {
+    public static func dataStream(_ params: URLConnectionParams) -> NetworkStream {
 
-        return create(producer: { observer -> DisposableType? in
+        return AsyncStream { observer -> Disposable in
 
             let stream = chunkedDataStream(params)
 
-            let responseData = NSMutableData()
+            var responseData = Data()
 
             return stream.observe { event -> () in
 
                 switch event {
-                case .Success(let value):
+                case .success(let value):
                     let result = NetworkResponse(params: params, response: value, responseData: responseData)
-                    observer(.Success(result))
-                case .Next(let chunk):
+                    observer(.success(result))
+                case .next(let chunk):
                     switch chunk {
-                    case .Download(let info):
-                        responseData.appendData(info.dataChunk)
-                    case .Upload:
+                    case .download(let info):
+                        responseData.append(info.dataChunk)
+                    case .upload:
                         break
                     }
-                    observer(.Next(chunk))
-                case .Failure(let error):
-                    observer(.Failure(error))
+                    observer(.next(chunk))
+                case .failure(let error):
+                    observer(.failure(error))
                 }
             }
-        })
+        }
     }
 
-    @warn_unused_result
-    public static func dataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func dataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -71,8 +66,7 @@ public struct network {
         return network.dataStream(params)
     }
 
-    @warn_unused_result
-    public static func http200DataStream(params: URLConnectionParams) -> NetworkStream {
+    public static func http200DataStream(_ params: URLConnectionParams) -> NetworkStream {
 
         let stream = dataStream(params)
 
@@ -80,16 +74,15 @@ public struct network {
 
             let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
             switch result {
-            case .Failure(let error):
-                return .Failure(error)
-            case .Success:
-                return .Success(response)
+            case .failure(let error):
+                return .failure(error)
+            case .success:
+                return .success(response)
             }
         }
     }
 
-    @warn_unused_result
-    public static func http200DataStream(url: NSURL, postData: NSData?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func http200DataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -103,23 +96,23 @@ public struct network {
         return network.http200DataStream(params)
     }
 
-    private static func downloadStatusCodeResponseAnalyzer(context: URLConnectionParams) -> NSHTTPURLResponse -> Result<NSHTTPURLResponse, ErrorWithContext> {
+    fileprivate static func downloadStatusCodeResponseAnalyzer(_ context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
 
-        return { (response: NSHTTPURLResponse) -> Result<NSHTTPURLResponse, ErrorWithContext> in
+        return { (response: HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> in
 
             let statusCode = response.statusCode
 
             if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
                 let httpError = HttpError(httpCode: statusCode, context: context)
                 let contextError = ErrorWithContext(error: httpError, context: #function)
-                return .Failure(contextError)
+                return .failure(contextError)
             }
 
-            return .Success(response)
+            return .success(response)
         }
     }
 
-    private static func networkErrorAnalyzer(context: URLConnectionParams) -> JNetworkErrorTransformer {
+    fileprivate static func networkErrorAnalyzer(_ context: URLConnectionParams) -> JNetworkErrorTransformer {
 
         return { error -> NSError in
 
@@ -132,15 +125,14 @@ public struct network {
     }
 }
 
-public extension AsyncStreamType where Next == NetworkProgress {
+public extension AsyncStreamType where NextT == NetworkProgress {
 
-    @warn_unused_result
-    public func netMapNext() -> AsyncStream<Value, AnyObject, Error> {
+    public func netMapNext() -> AsyncStream<ValueT, AnyObject, ErrorT> {
         return mapNext { info -> AnyObject in
             switch info {
-            case .Download(let chunk):
+            case .download(let chunk):
                 return chunk
-            case .Upload(let chunk):
+            case .upload(let chunk):
                 return chunk
             }
         }

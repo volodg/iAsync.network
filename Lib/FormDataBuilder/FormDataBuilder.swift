@@ -12,7 +12,7 @@ import iAsync_utils
 
 final public class FormDataBuilder {
 
-    public static func formDataForParams(boundary: String, params: [String:String], ending: String = "--") -> NSData {
+    public static func formDataForParams(_ boundary: String, params: [String:String], ending: String = "--") -> Data {
 
         let result = NSMutableData()
 
@@ -22,21 +22,21 @@ final public class FormDataBuilder {
 
                 autoreleasepool {
                     let boundaryStr  = "--\(boundary)\r\n"
-                    let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-                    result.appendData(boundaryData)
+                    let boundaryData = boundaryStr.data(using: String.Encoding.utf8)!
+                    result.append(boundaryData)
                 }
                 //[self appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
                 autoreleasepool {
                     let contentDisposition = "Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n"
-                    let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
-                    result.appendData(contentDispositionData)
+                    let contentDispositionData = contentDisposition.data(using: String.Encoding.utf8)!
+                    result.append(contentDispositionData)
                 }
                 //[self appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key] dataUsingEncoding:NSUTF8StringEncoding]]
 
                 autoreleasepool {
-                    let valueData = "\(value)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
-                    result.appendData(valueData)
+                    let valueData = "\(value)\r\n".data(using: String.Encoding.utf8)!
+                    result.append(valueData)
                 }
                 //[self appendData:[[obj description] dataUsingEncoding:NSUTF8StringEncoding]]
             }
@@ -44,29 +44,29 @@ final public class FormDataBuilder {
 
         autoreleasepool {
             let boundaryStr  = "--\(boundary)\(ending)"
-            let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-            result.appendData(boundaryData)
+            let boundaryData = boundaryStr.data(using: String.Encoding.utf8)!
+            result.append(boundaryData)
         }
         //[self appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
-        return result.copy() as! NSData
+        return result.copy() as! Data
     }
 
     public static func tmpFileForUploadStreamWithDataForFilePath(
-        dataFilePath: FilePath,
+        _ dataFilePath: FilePath,
         boundary    : String,
         name        : String,
         fileName    : String,
         contentType : String?,
         params      : [String:String]?) throws -> String {
 
-        var filePath = NSUUID().UUIDString
+        var filePath = UUID().uuidString
 
         filePath = String.cachesPathByAppendingPathComponent(filePath)
 
-        NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
+        FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
 
-        guard let file = NSFileHandle(forWritingAtPath: filePath) else {
+        guard let file = FileHandle(forWritingAtPath: filePath) else {
 
             throw UtilsError(description: "can not create NSFileHandle with path: \(filePath)")
         }
@@ -74,39 +74,39 @@ final public class FormDataBuilder {
         autoreleasepool {
 
             let boundaryStr  = "--\(boundary)\r\n"
-            let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-            file.writeData(boundaryData)
+            let boundaryData = boundaryStr.data(using: String.Encoding.utf8)!
+            file.write(boundaryData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
         autoreleasepool {
 
             let contentDisposition = "Content-Disposition: form-data; name=\"\(name)\"; filename=\"\(fileName)\"\r\n"
-            let contentDispositionData = contentDisposition.dataUsingEncoding(NSUTF8StringEncoding)!
-            file.writeData(contentDispositionData)
+            let contentDispositionData = contentDisposition.data(using: String.Encoding.utf8)!
+            file.write(contentDispositionData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", parameter, fileName] dataUsingEncoding:NSUTF8StringEncoding]]
 
         autoreleasepool {
             let contentTypeStr  = contentType ?? "application/octet-stream"
             let contentTypeSrv  = "Content-Type: \(contentTypeStr)\r\n\r\n"
-            let contentTypeData = contentTypeSrv.dataUsingEncoding(NSUTF8StringEncoding)!
-            file.writeData(contentTypeData)
+            let contentTypeData = contentTypeSrv.data(using: String.Encoding.utf8)!
+            file.write(contentTypeData)
         }
         //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]
 
         autoreleasepool {
 
-            let uploadDataFile = NSFileHandle(forReadingAtPath: dataFilePath.path)!
+            let uploadDataFile = FileHandle(forReadingAtPath: dataFilePath.path)!
 
             let chunkSize = 10*1024
 
-            var readBytes = uploadDataFile.readDataOfLength(chunkSize)
+            var readBytes = uploadDataFile.readData(ofLength: chunkSize)
 
-            while readBytes.length != 0 {
+            while readBytes.count != 0 {
 
-                file.writeData(readBytes)
-                readBytes = uploadDataFile.readDataOfLength(chunkSize)
+                file.write(readBytes)
+                readBytes = uploadDataFile.readData(ofLength: chunkSize)
             }
 
             uploadDataFile.closeFile()
@@ -116,8 +116,8 @@ final public class FormDataBuilder {
         autoreleasepool {
 
             let boundaryStr  = "\r\n--\(boundary)--\r\n"
-            let boundaryData = boundaryStr.dataUsingEncoding(NSUTF8StringEncoding)!
-            file.writeData(boundaryData)
+            let boundaryData = boundaryStr.data(using: String.Encoding.utf8)!
+            file.write(boundaryData)
         }
         //[result appendData:[[[NSString alloc] initWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]
 
@@ -126,7 +126,7 @@ final public class FormDataBuilder {
             autoreleasepool {
 
                 let formData = self.formDataForParams(boundary, params: params, ending: "\r\n")
-                file.writeData(formData)
+                file.write(formData)
             }
         }
 

@@ -8,13 +8,13 @@
 
 import Foundation
 
-public extension NSURL {
+public extension URL {
 
     func logCookies() {
 
         var cookiesLog = "Cookies for url: \(self)\n"
 
-        if let cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage().cookiesForURL(self) {
+        if let cookies = HTTPCookieStorage.shared.cookies(for: self) {
             for cookie in cookies {
                 cookiesLog += "Name: '\(cookie.name)'; Value: '\(cookie.value)'\n"
             }
@@ -25,12 +25,12 @@ public extension NSURL {
 
     func removeCookies() {
 
-        let cookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        let cookies = cookieStorage.cookiesForURL(self)
+        let cookieStorage = HTTPCookieStorage.shared
+        let cookies = cookieStorage.cookies(for: self)
 
         if let cookies = cookies {
             for cookie in cookies {
-                cookieStorage.deleteCookie(cookie as NSHTTPCookie)
+                cookieStorage.deleteCookie(cookie as HTTPCookie)
             }
         }
     }

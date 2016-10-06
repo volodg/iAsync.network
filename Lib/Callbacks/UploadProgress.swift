@@ -11,6 +11,6 @@ import Foundation
 protocol UploadProgress : NSObjectProtocol {
 
     var progress: Double { get }
-    var url     : NSURL { get }
+    var url     : URL { get }
     var headers : URLConnectionParams.HeadersType? { get }
 }
