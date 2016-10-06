@@ -23,7 +23,7 @@ public struct network {
         return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
     }
 
-    public static func dataStream(_ params: URLConnectionParams) -> NetworkStream {
+    public static func dataStreamWith(params: URLConnectionParams) -> NetworkStream {
 
         return AsyncStream { observer -> Disposable in
 
@@ -52,7 +52,7 @@ public struct network {
         }
     }
 
-    public static func dataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func dataStreamWith(url: URL, postData: Data? = nil, headers: URLConnectionParams.HeadersType? = nil) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -63,12 +63,12 @@ public struct network {
             httpBodyStreamBuilder    : nil,
             certificateCallback      : nil)
 
-        return network.dataStream(params)
+        return network.dataStreamWith(params: params)
     }
 
     public static func http200DataStream(_ params: URLConnectionParams) -> NetworkStream {
 
-        let stream = dataStream(params)
+        let stream = dataStreamWith(params: params)
 
         return stream.tryMap { response -> Result<NetworkResponse, ErrorWithContext> in
 
