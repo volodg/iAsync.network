@@ -8,6 +8,8 @@
 
 import Foundation
 
+import iAsync_utils
+
 public struct NetworkResponse : CustomStringConvertible {
 
     public let params      : URLConnectionParams
