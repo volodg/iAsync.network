@@ -12,7 +12,7 @@ import iAsync_utils
 
 final public class FormDataBuilder {
 
-    public static func formDataForParams(_ boundary: String, params: [String:String], ending: String = "--") -> Data {
+    public static func formDataFor(boundary: String, params: [String:String], ending: String = "--") -> Data {
 
         let result = NSMutableData()
 
@@ -62,7 +62,7 @@ final public class FormDataBuilder {
 
         var filePath = UUID().uuidString
 
-        filePath = String.cachesPathByAppendingPathComponent(filePath)
+        filePath = String.cachesPathByAppending(pathComponent: filePath)
 
         FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
 
@@ -125,7 +125,7 @@ final public class FormDataBuilder {
 
             autoreleasepool {
 
-                let formData = self.formDataForParams(boundary, params: params, ending: "\r\n")
+                let formData = self.formDataFor(boundary: boundary, params: params, ending: "\r\n")
                 file.write(formData)
             }
         }
