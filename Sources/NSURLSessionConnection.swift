@@ -38,7 +38,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
     internal func start() {
 
         if params.url.isFileURL {
-            processLocalFileWithPath(params.url.path)
+            processLocalFileWith(path: params.url.path)
             return
         }
 
@@ -109,7 +109,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         return nativeConnection
     }
 
-    func finishLoading(_ error: ErrorWithContext?) {
+    func finishLoadingWith(error: ErrorWithContext?) {
 
         let finish = self.didFinishLoadingBlock
 
@@ -121,7 +121,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
 
         if let error = error {
             let contextError = ErrorWithContext(error: error as NSError, context: #function)
-            finishLoading(contextError)
+            finishLoadingWith(error: contextError)
         }
     }
 
@@ -161,7 +161,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         didCompleteWithError error: NSError?) {
 
         let contextError = error.flatMap { ErrorWithContext(error: $0, context: #function) }
-        finishLoading(contextError)
+        finishLoadingWith(error: contextError)
     }
 
     internal func URLSession(
@@ -206,7 +206,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         }
     }
 
-    fileprivate func processLocalFileWithPath(_ path: String) {
+    fileprivate func processLocalFileWith(path: String) {
 
         //STODO read file in separate thread
         //STODO read big files by chunks

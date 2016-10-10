@@ -18,16 +18,16 @@ public typealias NetworkStream = AsyncStream<NetworkResponse, NetworkProgress, E
 
 public struct network {
 
-    public static func chunkedDataStream(_ params: URLConnectionParams) -> AsyncStream<HTTPURLResponse, NetworkProgress, ErrorWithContext> {
+    public static func chunkedDataStreamWith(params: URLConnectionParams) -> AsyncStream<HTTPURLResponse, NetworkProgress, ErrorWithContext> {
 
-        return createStream { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzer(params)) }
+        return createStreamWith { NetworkAsyncStream(params: params, errorTransformer: networkErrorAnalyzerWith(context: params)) }
     }
 
     public static func dataStreamWith(params: URLConnectionParams) -> NetworkStream {
 
         return AsyncStream { observer -> Disposable in
 
-            let stream = chunkedDataStream(params)
+            let stream = chunkedDataStreamWith(params: params)
 
             var responseData = Data()
 
@@ -66,13 +66,13 @@ public struct network {
         return network.dataStreamWith(params: params)
     }
 
-    public static func http200DataStream(_ params: URLConnectionParams) -> NetworkStream {
+    public static func http200DataStreamWith(params: URLConnectionParams) -> NetworkStream {
 
         let stream = dataStreamWith(params: params)
 
         return stream.tryMap { response -> Result<NetworkResponse, ErrorWithContext> in
 
-            let result = downloadStatusCodeResponseAnalyzer(params)(response.response)
+            let result = downloadStatusCodeResponseAnalyzerWith(context: params)(response.response)
             switch result {
             case .failure(let error):
                 return .failure(error)
@@ -82,7 +82,7 @@ public struct network {
         }
     }
 
-    public static func http200DataStream(_ url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
+    public static func http200DataStreamWith(url: URL, postData: Data?, headers: URLConnectionParams.HeadersType?) -> NetworkStream {
 
         let params = URLConnectionParams(
             url                      : url,
@@ -93,10 +93,10 @@ public struct network {
             httpBodyStreamBuilder    : nil,
             certificateCallback      : nil)
 
-        return network.http200DataStream(params)
+        return network.http200DataStreamWith(params: params)
     }
 
-    fileprivate static func downloadStatusCodeResponseAnalyzer(_ context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
+    fileprivate static func downloadStatusCodeResponseAnalyzerWith(context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
 
         return { (response: HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> in
 
@@ -112,7 +112,7 @@ public struct network {
         }
     }
 
-    fileprivate static func networkErrorAnalyzer(_ context: URLConnectionParams) -> JNetworkErrorTransformer {
+    fileprivate static func networkErrorAnalyzerWith(context: URLConnectionParams) -> JNetworkErrorTransformer {
 
         return { error -> NSError in
 
