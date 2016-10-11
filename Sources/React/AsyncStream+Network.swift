@@ -96,7 +96,7 @@ public struct network {
         return network.http200DataStreamWith(params: params)
     }
 
-    fileprivate static func downloadStatusCodeResponseAnalyzerWith(context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
+    private static func downloadStatusCodeResponseAnalyzerWith(context: URLConnectionParams) -> (HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> {
 
         return { (response: HTTPURLResponse) -> Result<HTTPURLResponse, ErrorWithContext> in
 
@@ -112,7 +112,7 @@ public struct network {
         }
     }
 
-    fileprivate static func networkErrorAnalyzerWith(context: URLConnectionParams) -> JNetworkErrorTransformer {
+    private static func networkErrorAnalyzerWith(context: URLConnectionParams) -> JNetworkErrorTransformer {
 
         return { error -> NSError in
 

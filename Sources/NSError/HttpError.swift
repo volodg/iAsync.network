@@ -10,8 +10,8 @@ import Foundation
 
 final public class HttpError : NetworkError {
 
-    fileprivate let context: CustomStringConvertible
-    fileprivate let httpCode: CFIndex
+    private let context: CustomStringConvertible
+    private let httpCode: CFIndex
 
     public required init(httpCode: CFIndex, context: CustomStringConvertible) {
 

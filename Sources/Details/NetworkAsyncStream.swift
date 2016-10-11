@@ -25,10 +25,10 @@ final class NetworkAsyncStream : AsyncStreamInterface {
     typealias NextT  = NetworkProgress
     typealias ErrorT = ErrorWithContext
 
-    fileprivate let params          : URLConnectionParams
-    fileprivate let errorTransformer: JNetworkErrorTransformer?
+    private let params          : URLConnectionParams
+    private let errorTransformer: JNetworkErrorTransformer?
 
-    fileprivate var connection: NSURLSessionConnection?
+    private var connection: NSURLSessionConnection?
 
     init(params: URLConnectionParams, errorTransformer: JNetworkErrorTransformer?) {
 

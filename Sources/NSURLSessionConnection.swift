@@ -26,14 +26,14 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
     internal var didUploadDataBlock          : DidUploadDataHandler?
     internal var shouldAcceptCertificateBlock: ShouldAcceptCertificateForHost?
 
-    fileprivate let params: URLConnectionParams
+    private let params: URLConnectionParams
 
     internal init(params: URLConnectionParams) {
 
         self.params = params
     }
 
-    fileprivate var sessionTask: URLSessionTask?
+    private var sessionTask: URLSessionTask?
 
     internal func start() {
 
@@ -61,8 +61,8 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         nativeConnection.invalidateAndCancel()
     }
 
-    fileprivate var _downloadedBytesCount: Int64 = 0
-    fileprivate(set) internal var downloadedBytesCount: Int64 {
+    private var _downloadedBytesCount: Int64 = 0
+    private(set) internal var downloadedBytesCount: Int64 {
         get {
             return _downloadedBytesCount
         }
@@ -71,8 +71,8 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         }
     }
 
-    fileprivate var _totalBytesCount: Int64 = 0
-    fileprivate(set) internal var totalBytesCount: Int64 {
+    private var _totalBytesCount: Int64 = 0
+    private(set) internal var totalBytesCount: Int64 {
         get {
             return _totalBytesCount
         }
@@ -81,8 +81,8 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         }
     }
 
-    fileprivate var _nativeConnection: Foundation.URLSession?
-    fileprivate var nativeConnection: Foundation.URLSession {
+    private var _nativeConnection: Foundation.URLSession?
+    private var nativeConnection: Foundation.URLSession {
 
         if let nativeConnection = _nativeConnection {
 
@@ -206,7 +206,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         }
     }
 
-    fileprivate func processLocalFileWith(path: String) {
+    private func processLocalFileWith(path: String) {
 
         //STODO read file in separate thread
         //STODO read big files by chunks
