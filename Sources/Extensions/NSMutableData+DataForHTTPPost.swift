@@ -10,6 +10,7 @@ import Foundation
 
 public extension NSMutableData {
 
+    //todo rename?
     static func dataForHTTPPostWithData(_ data: Data, fileName: String, parameterName: String, boundary: String) -> Self {
 
         let result = self.init(capacity: data.count + 512)!
@@ -26,6 +27,7 @@ public extension NSMutableData {
         return result
     }
 
+    //todo rename?
     func appendHTTPParameters(_ parameters: NSDictionary, boundary: NSString) {
 
         parameters.enumerateKeysAndObjects(options: []) { (key: Any, value: Any, stop: UnsafeMutablePointer<ObjCBool>) in
