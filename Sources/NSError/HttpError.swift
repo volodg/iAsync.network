@@ -45,4 +45,9 @@ final public class HttpError : NetworkError {
         let result = "\(type(of: self)) : \(localizedDescription) Http code:\(httpCode) context:\(context.description)"
         return result
     }
+
+    override open var canRepeatError: Bool {
+
+        return true
+    }
 }

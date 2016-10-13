@@ -24,9 +24,12 @@ final public class NSNoNetworkError : NSNetworkError {
             bundle : Bundle(for: type(of: self)),
             comment:"")
     }
-}
 
-public extension LoggedObject where Self : NSNoNetworkError {
+    override open var logTarget: LogTarget {
+        return LogTarget.console
+    }
 
-    var logTarget: LogTarget { return LogTarget.console }
+    override open var canRepeatError: Bool {
+        return true
+    }
 }
