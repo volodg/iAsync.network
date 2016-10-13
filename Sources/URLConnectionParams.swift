@@ -8,9 +8,10 @@
 
 import Foundation
 
+import iAsync_utils
 import enum ReactiveKit.Result
 
-public typealias InputStreamBuilder = () -> Result<InputStream, NSError>
+public typealias InputStreamBuilder = () -> Result<InputStream, UtilsError>
 
 public enum HttpMethod : String {
 

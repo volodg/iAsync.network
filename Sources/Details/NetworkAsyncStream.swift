@@ -11,7 +11,7 @@ import Foundation
 import protocol iAsync_reactiveKit.AsyncStreamInterface
 import iAsync_utils
 
-internal typealias JNetworkErrorTransformer = (_ error: NSError) -> NSError
+internal typealias JNetworkErrorTransformer = (_ error: UtilsError) -> UtilsError
 
 public enum NetworkProgress {
 
@@ -72,7 +72,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
 
             if let error_ = errorVal {
 
-                let passError: NSError
+                let passError: UtilsError
                 if let errorTransformer = errorTransformer {
                     passError = errorTransformer(error_.error)
                 } else {

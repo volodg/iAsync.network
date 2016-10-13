@@ -18,38 +18,31 @@ final public class HttpError : NetworkError {
         self.httpCode = httpCode
         self.context  = context
 
-        super.init(
-            description: "J_HTTP_ERROR",
-            domain     : "com.just_for_fun.library.http",
-            code       : httpCode)
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(description: "J_HTTP_ERROR")
     }
 
     func isHttpNotChangedError() -> Bool {
 
-        return code == 304
+        return httpCode == 304
     }
 
     func isServiceUnavailableError() -> Bool {
 
-        return code == 503
+        return httpCode == 503
     }
 
     func isInternalServerError() -> Bool {
 
-        return code == 500
+        return httpCode == 500
     }
 
     func isNotFoundError() -> Bool {
 
-        return code == 404
+        return httpCode == 404
     }
 
-    /*override swift3 open var errorLogText: String {
-        let result = "\(type(of: self)) : \(localizedDescription) Http code:\(code) context:\(context.description)"
+    override open var errorLogText: String {
+        let result = "\(type(of: self)) : \(localizedDescription) Http code:\(httpCode) context:\(context.description)"
         return result
-    }*/
+    }
 }

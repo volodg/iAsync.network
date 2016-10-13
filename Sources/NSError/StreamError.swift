@@ -20,20 +20,12 @@ final public class StreamError : NetworkError {
         self.streamError = streamError
         self.context     = context
 
-        let domain = "com.just_for_fun.library.network.CFError(\(streamError.domain))"
         let description = "JNETWORK_CF_STREAM_ERROR"
 
-        super.init(description: description, domain: domain, code: Int(streamError.error))
+        super.init(description: description)
     }
 
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-public extension LoggedObject where Self : StreamError {
-
-    var errorLogText: String {
+    override open var errorLogText: String {
 
         let result = "\(type(of: self)) : \(localizedDescription) nativeError domain:\(streamError.domain) error_code:\(streamError.error) context:\(context)"
         return result

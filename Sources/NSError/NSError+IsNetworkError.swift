@@ -9,14 +9,17 @@
 import Foundation
 
 import CFNetwork
+import iAsync_utils
 
-public extension NSError {
+public extension UtilsError {
 
     var isNetworkError: Bool {
 
-        if domain != NSURLErrorDomain { return false }
+        guard let nsError = self as? WrapperOfNSError else { return false }
 
-        guard let type = CFNetworkErrors(rawValue: CInt(code)) else { return false }
+        if nsError.error.domain != NSURLErrorDomain { return false }
+
+        guard let type = CFNetworkErrors(rawValue: CInt(nsError.error.code)) else { return false }
 
         return type == .cfurlErrorTimedOut
             || type == .cfurlErrorCannotFindHost
@@ -28,16 +31,20 @@ public extension NSError {
 
     var socketIsNoLongerUsable: Bool {
 
-        return domain == NSPOSIXErrorDomain && Int32(code) == EBADF
+        guard let nsError = self as? WrapperOfNSError else { return false }
+
+        return nsError.error.domain == NSPOSIXErrorDomain && Int32(nsError.error.code) == EBADF
     }
 
     var isActiveCallError: Bool {
 
-        if domain != NSURLErrorDomain {
+        guard let nsError = self as? WrapperOfNSError else { return false }
+
+        if nsError.error.domain != NSURLErrorDomain {
             return false
         }
 
-        let type = CFNetworkErrors(rawValue: CInt(code))
+        let type = CFNetworkErrors(rawValue: CInt(nsError.error.code))
         return type == .cfurlErrorCallIsActive
     }
 }

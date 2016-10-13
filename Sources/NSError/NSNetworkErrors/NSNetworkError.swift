@@ -13,18 +13,14 @@ import iAsync_utils
 public class NSNetworkError : NetworkError {
 
     let context: URLConnectionParams
-    let nativeError: NSError
+    let nativeError: UtilsError
 
-    public required init(context: URLConnectionParams, nativeError: NSError) {
+    public required init(context: URLConnectionParams, nativeError: UtilsError) {
 
         self.context     = context
         self.nativeError = nativeError
 
         super.init(description:"")
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     public override var localizedDescription: String {
@@ -36,7 +32,7 @@ public class NSNetworkError : NetworkError {
     }
 
     public static func createJNSNetworkErrorWithContext(
-        _ context: URLConnectionParams, nativeError: NSError) -> NSNetworkError {
+        _ context: URLConnectionParams, nativeError: UtilsError) -> NSNetworkError {
 
         let selfType: NSNetworkError.Type
 
@@ -60,14 +56,11 @@ public class NSNetworkError : NetworkError {
     }
 
     //todo rename?
-    class func isMineNSNetworkError(_ error: NSError) -> Bool {
+    class func isMineNSNetworkError(_ error: UtilsError) -> Bool {
         return false
     }
-}
 
-public extension LoggedObject where Self : NSNetworkError {
-
-    var errorLogText: String {
+    override open var errorLogText: String {
 
         let result = "\(type(of: self)) : \(localizedDescription) nativeError:\(nativeError) context:\(context)"
         return result
