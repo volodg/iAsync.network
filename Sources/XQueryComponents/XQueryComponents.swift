@@ -20,7 +20,7 @@ public struct XQueryComponents {
 
             let encodedKey = key.stringByEncodingURLQueryComponents()
 
-            if values.count > 0 {
+            if !values.isEmpty {
 
                 for value in values {
 
