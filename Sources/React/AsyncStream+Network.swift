@@ -104,7 +104,7 @@ public struct network {
 
             if HttpFlagChecker.isDownloadErrorFlag(statusCode) {
                 let httpError = HttpError(httpCode: statusCode, context: context)
-                let contextError = ErrorWithContext(error: httpError, context: #function)
+                let contextError = ErrorWithContext(utilsError: httpError, context: #function)
                 return .failure(contextError)
             }
 

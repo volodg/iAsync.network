@@ -120,7 +120,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
     internal func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
 
         if let error = error {
-            let contextError = ErrorWithContext(error: error, context: #function)
+            let contextError = ErrorWithContext(genericError: error, context: #function)
             finishLoadingWith(error: contextError)
         }
     }
@@ -160,7 +160,7 @@ internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
         task   : URLSessionTask!,
         didCompleteWithError error: NSError?) {
 
-        let contextError = error.flatMap { ErrorWithContext(error: $0, context: #function) }
+        let contextError = error.flatMap { ErrorWithContext(genericError: $0, context: #function) }
         finishLoadingWith(error: contextError)
     }
 

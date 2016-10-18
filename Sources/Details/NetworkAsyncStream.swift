@@ -79,7 +79,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
                     passError = error_.error
                 }
 
-                let errorWithContext = ErrorWithContext(error: passError, context: error_.context)
+                let errorWithContext = ErrorWithContext(utilsError: passError, context: error_.context)
                 error(errorWithContext)
                 return
             }
@@ -90,7 +90,7 @@ final class NetworkAsyncStream : AsyncStreamInterface {
             } else {
 
                 let error_ = UtilsError(description: "no resultHolder")
-                let errorWithContext = ErrorWithContext(error: error_, context: #function)
+                let errorWithContext = ErrorWithContext(utilsError: error_, context: #function)
                 error(errorWithContext)
             }
         }
