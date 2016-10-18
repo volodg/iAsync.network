@@ -9,6 +9,7 @@ import iAsync_utils
 
 import Foundation
 
+//todo NS
 internal class NSURLSessionConnection : NSObject, URLSessionDelegate {
 
     func clearCallbacks() {

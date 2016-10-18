@@ -1,5 +1,5 @@
 //
-//  NSError+IsNetworkError.swift
+//  UtilsError+IsNetworkError.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 06.06.14.

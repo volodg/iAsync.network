@@ -1,5 +1,5 @@
 //
-//  NSURL+Cookies.swift
+//  URL+Cookies.swift
 //  iAsync_network
 //
 //  Created by Vladimir Gorbenko on 24.09.14.

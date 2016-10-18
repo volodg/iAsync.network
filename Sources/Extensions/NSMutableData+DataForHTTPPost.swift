@@ -8,6 +8,7 @@
 
 import Foundation
 
+//todo NS
 public extension NSMutableData {
 
     //todo rename?
