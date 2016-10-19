@@ -58,15 +58,15 @@ final public class FormDataBuilder {
         name        : String,
         fileName    : String,
         contentType : String?,
-        params      : [String:String]?) throws -> String {
+        params      : [String:String]?) throws -> URL {
 
-        var filePath = UUID().uuidString
+        var fileName = UUID().uuidString
 
-        filePath = String.cachesPathByAppending(pathComponent: filePath)
+        let filePath = URL.cachesPathByAppending(pathComponent: fileName)
 
-        FileManager.default.createFile(atPath: filePath, contents: nil, attributes: nil)
+        FileManager.default.createFile(atPath: filePath.path, contents: nil, attributes: nil)
 
-        guard let file = FileHandle(forWritingAtPath: filePath) else {
+        guard let file = try? FileHandle(forWritingTo: filePath) else {
 
             throw UtilsError(description: "can not create NSFileHandle with path: \(filePath)")
         }
@@ -95,9 +95,12 @@ final public class FormDataBuilder {
         }
         //[result appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]]
 
-        autoreleasepool {
+        try autoreleasepool {
 
-            let uploadDataFile = FileHandle(forReadingAtPath: dataFilePath.path)!
+            guard let uploadDataFile = try? FileHandle(forReadingFrom: dataFilePath.filePath) else {
+
+                throw UtilsError(description: "can not create NSFileHandle with path: \(dataFilePath)")
+            }
 
             let chunkSize = 10*1024
 
