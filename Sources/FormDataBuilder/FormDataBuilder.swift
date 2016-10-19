@@ -60,7 +60,7 @@ final public class FormDataBuilder {
         contentType : String?,
         params      : [String:String]?) throws -> URL {
 
-        var fileName = UUID().uuidString
+        let fileName = UUID().uuidString
 
         let filePath = URL.cachesPathByAppending(pathComponent: fileName)
 
