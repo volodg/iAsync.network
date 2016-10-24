@@ -60,9 +60,9 @@ final public class FormDataBuilder {
         contentType : String?,
         params      : [String:String]?) throws -> URL {
 
-        let fileName = UUID().uuidString
+        let cacheFileName = UUID().uuidString
 
-        let filePath = URL.cachesPathByAppending(pathComponent: fileName)
+        let filePath = URL.cachesPathByAppending(pathComponent: cacheFileName)
 
         FileManager.default.createFile(atPath: filePath.path, contents: nil, attributes: nil)
 
