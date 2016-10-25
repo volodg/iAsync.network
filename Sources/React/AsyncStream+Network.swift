@@ -127,7 +127,7 @@ public struct network {
 
 public extension AsyncStreamType where NextT == NetworkProgress {
 
-    public func netMapNext() -> AsyncStream<ValueT, AnyObject, ErrorT> {
+    public func netMapNext() -> AsyncStream<ValueT, Any, ErrorT> {
         return mapNext { info -> AnyObject in
             switch info {
             case .download(let chunk):
