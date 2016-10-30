@@ -12,7 +12,6 @@ import iAsync_utils
 
 final public class NSNoNetworkError : NSNetworkError {
 
-    //todo rename?
     override class func isMineNSNetworkError(_ error: UtilsError) -> Bool {
         return error.isNetworkError || error.socketIsNoLongerUsable
     }

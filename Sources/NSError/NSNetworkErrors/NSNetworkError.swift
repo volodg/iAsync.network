@@ -55,7 +55,6 @@ public class NSNetworkError : NetworkError {
         return selfType.init(context: context, nativeError: nativeError)
     }
 
-    //todo rename?
     class func isMineNSNetworkError(_ error: UtilsError) -> Bool {
         return false
     }
