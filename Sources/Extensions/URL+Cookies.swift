@@ -14,10 +14,8 @@ public extension URL {
 
         var cookiesLog = "Cookies for url: \(self)\n"
 
-        if let cookies = HTTPCookieStorage.shared.cookies(for: self) {
-            for cookie in cookies {
-                cookiesLog += "Name: '\(cookie.name)'; Value: '\(cookie.value)'\n"
-            }
+        HTTPCookieStorage.shared.cookies(for: self)?.forEach {
+            cookiesLog += "Name: '\($0.name)'; Value: '\($0.value)'\n"
         }
 
         print(cookiesLog)
@@ -28,10 +26,6 @@ public extension URL {
         let cookieStorage = HTTPCookieStorage.shared
         let cookies = cookieStorage.cookies(for: self)
 
-        if let cookies = cookies {
-            for cookie in cookies {
-                cookieStorage.deleteCookie(cookie as HTTPCookie)
-            }
-        }
+        cookies?.forEach { cookieStorage.deleteCookie($0 as HTTPCookie) }
     }
 }
