@@ -14,7 +14,7 @@ public struct NetworkResponse : CustomStringConvertible {
 
     public let params      : URLConnectionParams
     public let response    : HTTPURLResponse
-    public let responseData: Data
+    public var responseData: Data
 
     public var description: String {
 
